@@ -162,9 +162,6 @@ public class PoPomain {
 	@Excel(name = "ivtid", width = 15)
     @ApiModelProperty(value = "ivtid")
 	private java.lang.Integer ivtid;
-	/**ufts*/
-    @ApiModelProperty(value = "ufts")
-	private java.util.Date ufts;
 	/**cchanger*/
 	@Excel(name = "cchanger", width = 15)
     @ApiModelProperty(value = "cchanger")

@@ -1,7 +1,11 @@
 package org.jeecg.modules.u8.service;
 
+import org.apache.ibatis.annotations.Param;
+import org.jeecg.modules.u8.entity.PoPodetails;
 import org.jeecg.modules.u8.entity.PoPomain;
 import com.baomidou.mybatisplus.extension.service.IService;
+
+import java.util.List;
 
 /**
  * @Description: 采购订单主表
@@ -10,5 +14,5 @@ import com.baomidou.mybatisplus.extension.service.IService;
  * @Version: V1.0
  */
 public interface IPoPomainService extends IService<PoPomain> {
-
+    List<PoPomain> selectNoSyn();
 }

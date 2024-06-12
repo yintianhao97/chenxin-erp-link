@@ -390,9 +390,7 @@ public class PoPodetails {
 	@Excel(name = "fporefusenum", width = 15)
     @ApiModelProperty(value = "fporefusenum")
 	private java.math.BigDecimal fporefusenum;
-	/**dufts*/
-    @ApiModelProperty(value = "dufts")
-	private java.util.Date dufts;
+
 	/**iorderdid*/
 	@Excel(name = "iorderdid", width = 15)
     @ApiModelProperty(value = "iorderdid")

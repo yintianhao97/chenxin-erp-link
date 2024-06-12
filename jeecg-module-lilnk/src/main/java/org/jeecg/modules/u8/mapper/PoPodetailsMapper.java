@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.baomidou.dynamic.datasource.annotation.DS;
 import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Select;
 import org.jeecg.modules.u8.entity.PoPodetails;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 
@@ -16,4 +17,6 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 @DS("U8")
 public interface PoPodetailsMapper extends BaseMapper<PoPodetails> {
 
+    @Select("select * from PO_Podetails where poid = #{id}")
+    public List<PoPodetails> selectById(@Param("id") Integer id);
 }
