@@ -16,11 +16,15 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
  */
 @DS("U8")
 public interface DispatchListMapper extends BaseMapper<DispatchList> {
-    @Select("SELECT DispatchList.*\n" +
-            "FROM DispatchList\n" +
-            "JOIN DispatchLists ON DispatchList.DLID = DispatchLists.DLID\n" +
-            "WHERE DispatchList.cVouchType = '05' AND DispatchList.DLID NOT IN (SELECT ErpID FROM u8Link..DispatchListLink) and DispatchLists.cInvCode = 'C03048'")
-    List<DispatchList> listType05();
+    @Select("select * from DispatchList\n" +
+            "where cVouchType = '05' and bReturnFlag = '0' and DispatchList.DLID NOT IN (SELECT ErpID FROM u8Link..DispatchListLink)")
+    List<DispatchList> selectNoSynFa();
+
+
+
+    @Select("select * from DispatchList\n" +
+            "where cVouchType = '05' and bReturnFlag = '1' and DispatchList.DLID NOT IN (SELECT ErpID FROM u8Link..DispatchListLink)")
+    List<DispatchList> selectNoSynTui();
 
 
 

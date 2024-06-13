@@ -20,8 +20,14 @@ import java.util.List;
 public class DispatchListServiceImpl extends ServiceImpl<DispatchListMapper, DispatchList> implements IDispatchListService {
     @Autowired
     private DispatchListMapper dispatchListMapper;
+
     @Override
-    public List<DispatchList> listType05() {
-        return dispatchListMapper.listType05();
+    public List<DispatchList> selectNoSynFa() {
+        return dispatchListMapper.selectNoSynFa();
+    }
+
+    @Override
+    public List<DispatchList> selectNoSynTui() {
+        return dispatchListMapper.selectNoSynTui();
     }
 }

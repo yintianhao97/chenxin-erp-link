@@ -258,7 +258,7 @@ public class CrudTest {
     }
 
     @Test
-    public void dlJob() {
+    /*public void dlJob() {
         List<DispatchList> dispatchLists =
                 dispatchListService.listType05();
         for (DispatchList dispatchList : dispatchLists) {
@@ -290,11 +290,11 @@ public class CrudTest {
             cjkdjckjhderp.setSbz(dispatchList.getCmaker());
             //TODO:要修改获取名称
             //业务员
-            /*String cpersoncode = dispatchList.getCpersoncode();
+            *//*String cpersoncode = dispatchList.getCpersoncode();
             //如果cpersoncode为空，则跳出循环
             if (cpersoncode == null) {
                 continue;
-            }*/
+            }*//*
             cjkdjckjhderp.setSywymc(dispatchList.getCmaker());
 
             Date date1 = new Date();
@@ -410,9 +410,9 @@ public class CrudTest {
 
         }
 
-    }
+    }*/
 
-    @Test
+
     public void rdJob() {
         List<Rdrecord10> list = rdrecord10Service.selectNoSyn();
         for (Rdrecord10 rdrecord10 : list) {

@@ -4,6 +4,8 @@ import java.util.List;
 
 import com.baomidou.dynamic.datasource.annotation.DS;
 import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Select;
+import org.jeecg.modules.u8.entity.Customer;
 import org.jeecg.modules.u8.entity.Vendor;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 
@@ -15,5 +17,10 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
  */
 @DS("U8")
 public interface VendorMapper extends BaseMapper<Vendor> {
+
+    @Select("SELECT *\n" +
+            "FROM Vendor\n" +
+            "WHERE Vendor.cVenCode NOT IN (SELECT ErpID FROM u8Link..VendorLink);")
+    List<Vendor> selectNoSyn();
 
 }

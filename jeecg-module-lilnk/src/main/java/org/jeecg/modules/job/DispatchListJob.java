@@ -45,8 +45,9 @@ public class DispatchListJob {
     @Scheduled(cron = "0 0/5 * * * ? ")
     public void dlJob() {
         log.info("DispatchListJob定时任务开始执行");
-        List<DispatchList> dispatchLists =
-                dispatchListService.listType05();
+        /*List<DispatchList> dispatchLists =
+                dispatchListService.listType05();*/
+        List<DispatchList> dispatchLists = null;
         for (DispatchList dispatchList : dispatchLists) {
             //主表
             CJKDJCKJHDERP cjkdjckjhderp = new CJKDJCKJHDERP();
@@ -200,8 +201,8 @@ public class DispatchListJob {
 
 
     public void dlJob_bak() {
-        List<DispatchList> dispatchLists =
-                dispatchListService.listType05();
+        List<DispatchList> dispatchLists = null;
+
         for (DispatchList dispatchList : dispatchLists) {
             //主表
             CJKDJCKJHDERP cjkdjckjhderp = new CJKDJCKJHDERP();

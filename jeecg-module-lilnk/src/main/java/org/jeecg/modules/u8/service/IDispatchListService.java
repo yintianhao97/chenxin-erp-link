@@ -1,5 +1,6 @@
 package org.jeecg.modules.u8.service;
 
+import org.apache.ibatis.annotations.Select;
 import org.jeecg.modules.u8.entity.DispatchList;
 import com.baomidou.mybatisplus.extension.service.IService;
 
@@ -12,5 +13,7 @@ import java.util.List;
  * @Version: V1.0
  */
 public interface IDispatchListService extends IService<DispatchList> {
-    List<DispatchList> listType05();
+    List<DispatchList> selectNoSynFa();
+
+    List<DispatchList> selectNoSynTui();
 }

@@ -34,23 +34,22 @@ public class CrudTest11 {
     private IPoPodetailsService iPoPodetailsService;
     @Autowired
     private IPoPomainService iPoPomainService;
+    @Autowired
+    private IVendorService vendorService;
 
 
     @Test
     public void dlJob() {
-        for (PoPomain poPomain : iPoPomainService.selectNoSyn()) {
-            System.out.println("主表====");
-            System.out.println(poPomain);
-            System.out.println("详情表====");
-            for (PoPodetails poPodetails : iPoPodetailsService.selectById(poPomain.getPoid())) {
-                System.out.println(poPodetails);
-            }
-
-
+        List<Vendor> vendors = vendorService.selectNoSyn();
+        for (Vendor vendor : vendors) {
+            System.out.println(vendor);
         }
 
 
     }
+
+
+
 
     }
 
