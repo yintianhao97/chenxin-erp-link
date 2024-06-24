@@ -33,8 +33,9 @@ public class PoPomainJob {
     private ICJKWMSRKMXService icjkwmsrkmxService;
 
 
-
-
+    /**
+     * 采购订单更新
+     */
     public void rdJob() {
         log.info("Rdrecord10Job定时任务开始执行");
         List<PoPomain> poPomains = iPoPomainService.selectNoSyn();
@@ -45,6 +46,8 @@ public class PoPomainJob {
             CJKWMSRKHZ cjkwmsrkhz = new CJKWMSRKHZ();
             //单据编号 1
             cjkwmsrkhz.setDjbh(poPomain.getCpoid());
+
+
             //单据类型，1入库，2销售退回 1
             cjkwmsrkhz.setDjlx("1");
             ///日期
@@ -84,9 +87,9 @@ public class PoPomainJob {
 
                 CJKWMSRKMX cjkwmsrkmx = new CJKWMSRKMX();
                 //单据编号 1
-                cjkwmsrkmx.setDjbh(String.valueOf(poPodetail.getPoid()));
+                cjkwmsrkmx.setDjbh(poPomain.getCpoid());
                 //行号 1
-                cjkwmsrkmx.setDjSn(poPodetail.getIrowno());
+                cjkwmsrkmx.setDjSn(poPodetail.getIvouchrowno());
                 //商品编码 1
                 cjkwmsrkmx.setSpid(poPodetail.getCinvcode());
                 //数量 1

@@ -27,5 +27,10 @@ public interface DispatchListMapper extends BaseMapper<DispatchList> {
     List<DispatchList> selectNoSynTui();
 
 
+    @Select("select * from DispatchList where DLID = #{id}")
+    DispatchList getById(String id);
+
+    @Select("select * from DispatchList where cDLCode = #{code}")
+    DispatchList getByCode(String code);
 
 }

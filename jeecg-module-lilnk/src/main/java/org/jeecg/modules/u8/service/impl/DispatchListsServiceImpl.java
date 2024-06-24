@@ -22,6 +22,6 @@ public class DispatchListsServiceImpl extends ServiceImpl<DispatchListsMapper, D
     private DispatchListsMapper dispatchListsMapper;
     @Override
     public List<DispatchLists> selectById(String id) {
-        return dispatchListsMapper.selectById(id);
+        return dispatchListsMapper.selectByDLID(id);
     }
 }

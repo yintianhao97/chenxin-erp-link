@@ -32,9 +32,7 @@ public class PuArrivalVouch {
 	@Excel(name = "ivtid", width = 15)
     @ApiModelProperty(value = "ivtid")
 	private java.lang.Integer ivtid;
-	/**ufts*/
-    @ApiModelProperty(value = "ufts")
-	private java.util.Date ufts;
+
 	/**id*/
 	@TableId(type = IdType.ASSIGN_ID)
     @ApiModelProperty(value = "id")

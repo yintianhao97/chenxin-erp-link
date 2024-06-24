@@ -36,6 +36,10 @@ public class Rdrecord10Job {
     @Autowired
     private IRdrecord10LinkService iRdrecord10LinkService;
 
+
+    /**
+     * 产成品入库更新   应该是不用
+     */
     @Scheduled(cron = "0 0/5 * * * ? ")
     public void rdJob() {
         log.info("Rdrecord10Job定时任务开始执行");

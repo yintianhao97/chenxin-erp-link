@@ -27,7 +27,9 @@ public class InventoryJob {
     private IInventoryLinkService iInventoryLinkService;
     @Autowired
     private IlinkAutoIdService ilinkAutoIdService;
-
+    /*
+    存货更新
+     */
     //@Scheduled(cron = "0 0/5 * * * ? ")
     public void inventory() {
         log.info("InventoryJob定时任务开始执行");

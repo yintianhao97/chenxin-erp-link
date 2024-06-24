@@ -41,7 +41,9 @@ public class DispatchListJob {
     private IDispatchListLinkService dispatchListLinkService;
 
 
-
+    /**
+     * 销售发货
+     */
     @Scheduled(cron = "0 0/5 * * * ? ")
     public void dlJob() {
         log.info("DispatchListJob定时任务开始执行");

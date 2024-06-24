@@ -3,9 +3,11 @@ package org.jeecg.modules.job;
 import lombok.extern.slf4j.Slf4j;
 import org.jeecg.modules.link.entity.CJKJCWLDW;
 import org.jeecg.modules.link.entity.CustomerLink;
+import org.jeecg.modules.link.entity.VendorLink;
 import org.jeecg.modules.link.entity.linkAutoId;
 import org.jeecg.modules.link.service.ICJKJCWLDWService;
 import org.jeecg.modules.link.service.ICustomerLinkService;
+import org.jeecg.modules.link.service.IVendorLinkService;
 import org.jeecg.modules.link.service.IlinkAutoIdService;
 import org.jeecg.modules.u8.entity.Customer;
 import org.jeecg.modules.u8.entity.Vendor;
@@ -18,16 +20,19 @@ import java.util.List;
 @Slf4j
 @Component
 public class VendorJob {
+
     @Autowired
     private ICJKJCWLDWService icjkjcwldwService;
     @Autowired
     private IlinkAutoIdService ilinkAutoIdService;
     @Autowired
-    private ICustomerLinkService customerLinkService;
-    @Autowired
     private IVendorService iVendorService;
+    @Autowired
+    private IVendorLinkService iVendorLinkService;
 
-
+    /**
+     * 批量处理供应商信息，并保存到CJKJCWLDW表中
+     */
     public void Venjob(){
         List<Vendor> vendors = iVendorService.selectNoSyn();
         //获得id
@@ -108,11 +113,11 @@ public class VendorJob {
 
                 System.out.println(cjkjcwldw.toString());
                 boolean save = icjkjcwldwService.save(cjkjcwldw);
-                if (save) {
-                    customerId++;
-                    ilinkAutoIdService.uptateCustomerIdAdd();
-                    customerLinkService.save(new CustomerLink().setErpid(vendor.getCvencode()));
-                }
+                    if (save) {
+                        customerId++;
+                        ilinkAutoIdService.uptateCustomerIdAdd();
+                        iVendorLinkService.save(new VendorLink().setErpid(vendor.getCvencode()));
+                    }
 
             }
     }

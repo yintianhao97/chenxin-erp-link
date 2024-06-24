@@ -11,4 +11,8 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface IPuArrivalVouchsService extends IService<PuArrivalVouchs> {
 
+
+
+
+
 }

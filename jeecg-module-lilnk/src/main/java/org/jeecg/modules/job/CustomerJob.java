@@ -30,7 +30,9 @@ public class CustomerJob {
     @Autowired
     private IlinkAutoIdService ilinkAutoIdService;
 
-
+    /**
+     * 供应商更新
+     */
     @Scheduled(cron = "0 0/5 * * * ? ")
     public void customerJob() {
         log.info("CustomerJob定时任务开始执行");
