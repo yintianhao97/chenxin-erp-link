@@ -2,18 +2,25 @@ package org.jeecg.modules;
 
 import cn.hutool.core.util.NumberUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.google.gson.JsonObject;
 import org.jeecg.JeecgSystemApplication;
 import org.jeecg.modules.u8.entity.*;
 import org.jeecg.modules.u8.mapper.*;
 import org.jeecg.modules.u8.service.IGspVouchQCService;
 import org.jeecg.modules.u8.service.IGspVouchsQCService;
+import org.json.JSONObject;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.io.BufferedReader;
+import java.io.DataOutputStream;
+import java.io.InputStreamReader;
 import java.math.BigDecimal;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -50,6 +57,59 @@ public class GspVouchNoteAdd {
     @Autowired
     private Rdrecord32Mapper rdrecord32Mapper;
 
+
+    @Test
+    public void shenhe(){
+
+        //发货单号
+        DispatchList byCode = dispatchListMapper.getByCode("0000000029");
+        String cdlcode = byCode.getCdlcode();
+        //根据发货单查询 出库单
+        List<Rdrecords32> byCbdlcode = rdrecords32Mapper.getByCbdlcode(cdlcode);
+
+        Integer id = byCbdlcode.get(0).getId();
+
+        String targetUrl = U8LinkConstant.U8_LINK_URL + "/U8API/ReViewChuKu?id="+id.toString();
+        String vouchCode = null;
+
+        try {
+            URL url = new URL(targetUrl);
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            connection.setRequestMethod("POST");
+            connection.setRequestProperty("Content-Type", "application/json; utf-8");
+            connection.setRequestProperty("Accept", "application/json");
+            connection.setDoOutput(true);
+
+            try (DataOutputStream wr = new DataOutputStream(connection.getOutputStream())) {
+                //wr.writeBytes(jsonBody);
+                wr.flush();
+            }
+
+            int responseCode = connection.getResponseCode();
+            System.out.println("Response Code : " + responseCode);
+
+            BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+            String inputLine;
+            StringBuffer response = new StringBuffer();
+
+            while ((inputLine = in.readLine()) != null) {
+                response.append(inputLine);
+            }
+            in.close();
+
+            // 打印结果
+            System.out.println(response.toString());
+            JSONObject jsonObject = new JSONObject(response.toString());
+            vouchCode = jsonObject.getString("VouchCode");
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+
+
+    }
+
     @Test
     public void add(){
 
@@ -63,13 +123,13 @@ public class GspVouchNoteAdd {
 
 
         //发货单号
-        DispatchList byCode = dispatchListMapper.getByCode("0000000016");
+        DispatchList byCode = dispatchListMapper.getByCode("0000000029");
 
         int i1 = gspVouchNoteMapper.addVouchNote(String.valueOf(forecastid), str, "demo", null,new Date());
         if (i1 >0){
             System.out.println("添加成功");
             voucherHistoryMapper.codingAdd("010");
-            uaIdentityMapper.iFatherIdAdd("GSP_VouchNote", "900");
+            uaIdentityMapper.iFatherIdAdd("GSP_VouchNote", U8LinkConstant.U8_LINK_CACC_ID);
         }
 
         //List<DispatchLists> dispatchLists = dispatchListsMapper.selectByDLID(byCode.getDlid().toString());
@@ -100,7 +160,10 @@ public class GspVouchNoteAdd {
             //当前日期 没有时间
             Calendar calendar = Calendar.getInstance();
             Date currentDate2 = calendar.getTime();
-            gspVouchsNote.setDprodate(currentDate2);
+            //生产日期
+            gspVouchsNote.setDprodate(rdrecords32.getDmadedate());
+            //有效期
+            gspVouchsNote.setDvaldate(rdrecords32.getDvdate());
             //发货单ID
             gspVouchsNote.setCwhcode(cdlcode);
 
@@ -115,7 +178,7 @@ public class GspVouchNoteAdd {
             //辅助单位数量
             gspVouchsNote.setFquantitys(rdrecords32.getInum());
             //仓库code
-            gspVouchsNote.setCwhcodes(rdrecord32.getCwhcode());
+            gspVouchsNote.setCwhcodes(U8LinkConstant.U8_LINK_CWHCODE);
             //保质期
             gspVouchsNote.setImassdate(rdrecords32.getImassdate());
             //保质期单位
@@ -134,7 +197,7 @@ public class GspVouchNoteAdd {
             int insert = gspVouchsNoteMapper.insert(gspVouchsNote);
             if (insert > 0){
                 System.out.println("添加成功");
-                uaIdentityMapper.iChildIdAdd("GSP_VouchNote", "900");
+                uaIdentityMapper.iChildIdAdd("GSP_VouchNote", U8LinkConstant.U8_LINK_CACC_ID);
             }
 
         }

@@ -25,4 +25,11 @@ public interface PoPodetailsMapper extends BaseMapper<PoPodetails> {
             "join PO_Podetails d on m.POID=d.POID\n" +
             "where m.cPOID=#{code} and d.ivouchrowno=#{row}")
     PoPodetails getByCodeRow(String code,  String row);
+
+
+    @Select("select d.*\n" +
+            "from PO_Pomain m\n" +
+            "join PO_Podetails d on m.POID=d.poid\n" +
+            "where m.POID=#{poid} and d.ivouchrowno=#{row}")
+    PoPodetails getByPoidRow(String poid,  String row);
 }

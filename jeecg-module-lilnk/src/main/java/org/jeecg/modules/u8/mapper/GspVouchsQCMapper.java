@@ -4,6 +4,8 @@ import java.util.List;
 
 import com.baomidou.dynamic.datasource.annotation.DS;
 import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Select;
+import org.jeecg.modules.u8.entity.GspVouchQC;
 import org.jeecg.modules.u8.entity.GspVouchsQC;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 
@@ -16,4 +18,11 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 @DS("U8")
 public interface GspVouchsQCMapper extends BaseMapper<GspVouchsQC> {
 
+    @Select("select * from Gsp_vouchsqc where id = #{tid}")
+    List<GspVouchsQC> selectByTid(String tid);
+
+    @Select("SELECT *\n" +
+            "FROM GSP_VouchsQC\n" +
+            "WHERE id = #{id} and REVERSE(SUBSTRING(REVERSE(CBSYSBARCODE), 1, CHARINDEX('|', REVERSE(CBSYSBARCODE)) - 1)) = #{row};")
+    List<GspVouchsQC> selectByIdAndRow(String id, String row);
 }

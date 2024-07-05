@@ -53,16 +53,16 @@ public class GspVouchAdd {
     private YsjlXsMapper ysjlXsMapper;
 
     @Test
-    public void add2(){
-        List<YsjlXs> ysjlXs = ysjlXsMapper.selectList(new QueryWrapper<YsjlXs>());
+    public void Test1(){
+        List<YsjlXs> ysjlXs = ysjlXsMapper.selectList(new QueryWrapper<>());
         for (YsjlXs ysjlX : ysjlXs) {
-            PuArrivalVouch cs001 = puArrivalVouchMapper.getDaoHuoByCode(ysjlX.getShdjbh());
-            List<PuArrivalVouchs> daohuoFByID = puArrivalVouchsMapper.getDaohuoFByID(String.valueOf(cs001.getId()));
+            //到货单单号查询
+
+            PuArrivalVouch daoHuoByCode = puArrivalVouchMapper.getDaoHuoByCode(ysjlX.getShdjbh());
+
+            List<PuArrivalVouchs> daohuoFByID = puArrivalVouchsMapper.getDaohuoFByID(String.valueOf(daoHuoByCode.getId()));
 
 
-/*            String coding = voucherHistoryMapper.getCoding("001");
-            int i = Integer.parseInt(coding)+1;
-            String str = String.format("%010d", i);*/
             String ysdjbh = ysjlX.getYsdjbh();
 
             UaIdentity uaIdentity = uaIdentityMapper.selectOne(new QueryWrapper<UaIdentity>().eq("cVouchType", "GSP_VouchQC").eq("cAcc_Id", 900));
@@ -85,18 +85,19 @@ public class GspVouchAdd {
             //code
             gspVouchQC.setQcid(ysdjbh);
             //到货单ID
-            gspVouchQC.setIcode(cs001.getId());
+            gspVouchQC.setIcode(daoHuoByCode.getId());
             //到货单code
-            gspVouchQC.setCcode(cs001.getCcode());
+            gspVouchQC.setCcode(daoHuoByCode.getCcode());
 
+            //审核
             gspVouchQC.setCverifier("demo");
-
             gspVouchQC.setDverifydate(currentDate2);
             gspVouchQC.setDverifysystime(new Date());
             //日期
 
             gspVouchQC.setDarvdate(currentDate2);
             gspVouchQC.setDdate(currentDate2);
+
             //创建人
             gspVouchQC.setCmaker("demo");
             //单据类型 001 验收单 002 拒收单
@@ -114,9 +115,10 @@ public class GspVouchAdd {
             gspVouchQC.setCbsysbarcode("||GS01|"+ysdjbh);
 
             boolean save = iGspVouchQCService.save(gspVouchQC);
+
             if (save) {
                 System.out.println("添加成功");
-                uaIdentityMapper.iFatherIdAdd("GSP_VouchQC", "900");
+                uaIdentityMapper.iFatherIdAdd("GSP_VouchQC", U8LinkConstant.U8_LINK_CACC_ID);
                 //voucherHistoryMapper.codingAdd("001");
 
             }
@@ -125,21 +127,20 @@ public class GspVouchAdd {
                 UaIdentity uaIdentity1 = uaIdentityMapper.selectOne(new QueryWrapper<UaIdentity>().eq("cVouchType", "GSP_VouchQC").eq("cAcc_Id", 900));
                 int ids = uaIdentity1.getIchildid();
                 int ichildid = ids + 1000000001;
-
-
-
                 GspVouchsQC gspVouchsQC = new GspVouchsQC();
                 //id
                 gspVouchsQC.setAutoid(ichildid);
 
                 BigDecimal iquantity = puArrivalVouchs.getIquantity();
 
+                //计算换算比例
                 BigDecimal inum = puArrivalVouchs.getInum();
                 BigDecimal div = null;
                 if (inum != null) {
                     div = NumberUtil.div(iquantity, inum,2);
                 }
                 //换算比例
+                BigDecimal iinvexchrate = puArrivalVouchs.getIinvexchrate();
 
                 //二级单位
                 String cunitid = puArrivalVouchs.getCunitid();
@@ -177,7 +178,7 @@ public class GspVouchAdd {
 
 
                 //供应商
-                gspVouchsQC.setCvencode(cs001.getCvencode());
+                gspVouchsQC.setCvencode(daoHuoByCode.getCvencode());
 
                 gspVouchsQC.setBspecial(0);
                 gspVouchsQC.setBname(0);
@@ -198,9 +199,9 @@ public class GspVouchAdd {
 
 
                 //生产日期
-                gspVouchsQC.setDprodate(new Date());
+                gspVouchsQC.setDprodate(puArrivalVouchs.getDpdate());
                 //到期日期
-                gspVouchsQC.setDvaldate(new Date());
+                gspVouchsQC.setDvaldate(puArrivalVouchs.getDvdate());
 
                 gspVouchsQC.setDdateT(new Date());
 
@@ -211,7 +212,7 @@ public class GspVouchAdd {
                 //到货单行ID
                 gspVouchsQC.setIcodeT(puArrivalVouchs.getAutoid());
                 //订单编号
-                gspVouchsQC.setCordercode(cs001.getCpocode());
+                gspVouchsQC.setCordercode(daoHuoByCode.getCpocode());
                 //单位ID
                 gspVouchsQC.setCunitid(cunitid);
 
@@ -224,13 +225,13 @@ public class GspVouchAdd {
                 if (save) {
                     System.out.println("添加成功");
                     if (inum!=null){
-                        puArrivalVouchsMapper.updateYanShou(puArrivalVouchs.getAutoid().toString(), ysjlX.getShl().longValue(),ysjlX.getHegshl().longValue(),0L,ysjlX.getShl().longValue(),NumberUtil.div(ysjlX.getShl(), div, 4).longValue());
+                        puArrivalVouchsMapper.updateYanShou(puArrivalVouchs.getAutoid().toString(), ysjlX.getShl().longValue(),ysjlX.getHegshl().longValue(),ysjlX.getBuhgshl().longValue(),ysjlX.getShl().longValue(),NumberUtil.div(ysjlX.getShl(), div, 4).longValue());
 
                     }else {
-                        puArrivalVouchsMapper.updateYanShou(puArrivalVouchs.getAutoid().toString(), ysjlX.getShl().longValue(),ysjlX.getHegshl().longValue(),0L,ysjlX.getShl().longValue(),null);
+                        puArrivalVouchsMapper.updateYanShou(puArrivalVouchs.getAutoid().toString(), ysjlX.getShl().longValue(),ysjlX.getHegshl().longValue(),ysjlX.getBuhgshl().longValue(),ysjlX.getShl().longValue(),null);
                     }
 
-                    uaIdentityMapper.iChildIdAdd("GSP_VouchQC", "900");
+                    uaIdentityMapper.iChildIdAdd("GSP_VouchQC", U8LinkConstant.U8_LINK_CACC_ID);
                 }
             }
 
@@ -304,7 +305,7 @@ public class GspVouchAdd {
         boolean save = iGspVouchQCService.save(gspVouchQC);
         if (save) {
             System.out.println("添加成功");
-            uaIdentityMapper.iFatherIdAdd("GSP_VouchQC", "900");
+            uaIdentityMapper.iFatherIdAdd("GSP_VouchQC", U8LinkConstant.U8_LINK_CACC_ID);
             voucherHistoryMapper.codingAdd("001");
 
         }
@@ -418,7 +419,7 @@ public class GspVouchAdd {
                     puArrivalVouchsMapper.updateYanShou(puArrivalVouchs.getAutoid().toString(), 2000L,2000L,0L,2000L,null);
                 }
 
-                uaIdentityMapper.iChildIdAdd("GSP_VouchQC", "900");
+                uaIdentityMapper.iChildIdAdd("GSP_VouchQC", U8LinkConstant.U8_LINK_CACC_ID);
             }
         }
 
@@ -532,7 +533,7 @@ public class GspVouchAdd {
                     puArrivalVouchsMapper.updateYanShou(puArrivalVouchs.getAutoid().toString(), 2000L,2000L,0L,2000L,null);
                 }
 
-                uaIdentityMapper.iChildIdAdd("GSP_VouchQC", "900");
+                uaIdentityMapper.iChildIdAdd("GSP_VouchQC", U8LinkConstant.U8_LINK_CACC_ID);
             }
         }
 

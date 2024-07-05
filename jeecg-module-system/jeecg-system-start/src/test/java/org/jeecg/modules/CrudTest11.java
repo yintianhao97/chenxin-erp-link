@@ -74,11 +74,11 @@ public class CrudTest11 {
             //业务员 1
             cjkwmsrkhz.setYwy(poPomain.getCmaker());
             //单位内码 1
-            cjkwmsrkhz.setDwbh(poPomain.getCdepcode());
+            cjkwmsrkhz.setDwbh(poPomain.getCvencode());
             ///货主id? 产成品入库哪里来的供货商 1
-            cjkwmsrkhz.setShzid("L08");
+            cjkwmsrkhz.setShzid("HXS");
 
-            cjkwmsrkhz.setShzgsid("L08");
+            cjkwmsrkhz.setShzgsid("HXS");
             boolean save = icjkwmsrkhzService.save(cjkwmsrkhz);
 
             if (save) {
@@ -137,7 +137,7 @@ public class CrudTest11 {
                 // 将Date对象转换为格式化的字符串
                 String formattedDate111 = dateFormat123.format(new Date());
                 //货主id 1
-                cjkwmsrkmx.setShzid("L08");
+                cjkwmsrkmx.setShzid("HXS");
 
                 System.out.println(cjkwmsrkmx);
                 System.out.println(icjkwmsrkmxService.save(cjkwmsrkmx));

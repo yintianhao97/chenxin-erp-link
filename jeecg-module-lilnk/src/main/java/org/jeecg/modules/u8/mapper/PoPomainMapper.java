@@ -21,6 +21,9 @@ public interface PoPomainMapper extends BaseMapper<PoPomain> {
 
     @Select("select * " +
             "from PO_Pomain " +
-            "WHERE poid NOT IN (SELECT ErpID FROM u8Link..PoPomainLink);")
+            "WHERE cAuditDate is not null and poid NOT IN (SELECT ErpID FROM u8Link..PoPomainLink);")
     List<PoPomain> selectNoSyn();
+
+    @Select("select * from PO_Pomain where POID =#{id}")
+    PoPomain selectByErpId(String id);
 }

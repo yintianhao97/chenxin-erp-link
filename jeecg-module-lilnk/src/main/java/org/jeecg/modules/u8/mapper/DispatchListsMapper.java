@@ -18,4 +18,7 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 public interface DispatchListsMapper extends BaseMapper<DispatchLists> {
     @Select("select * from DispatchLists where DLID = #{id}")
     List<DispatchLists> selectByDLID(@Param("id")String id);
+
+    @Select("select * from DispatchLists where DLID = #{id} and irowno = #{row}")
+    DispatchLists selectByDLIDAndRow(String id,String row);
 }

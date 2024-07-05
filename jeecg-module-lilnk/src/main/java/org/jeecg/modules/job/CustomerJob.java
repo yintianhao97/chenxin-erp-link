@@ -33,7 +33,7 @@ public class CustomerJob {
     /**
      * 供应商更新
      */
-    @Scheduled(cron = "0 0/5 * * * ? ")
+    //@Scheduled(cron = "0 0/5 * * * ? ")
     public void customerJob() {
         log.info("CustomerJob定时任务开始执行");
         List<Customer> customers = customerService.selectNoSyn();
@@ -101,7 +101,7 @@ public class CustomerJob {
 
             //货主公司ID 1
             //TODO: 随便写一个先
-            cjkjcwldw.setShzgsid("L08");
+            cjkjcwldw.setShzgsid("HXS");
             cjkjcwldw.setSkhyh("");
             cjkjcwldw.setSzh("");
             cjkjcwldw.setSsh("");

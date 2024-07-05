@@ -1,24 +1,18 @@
 package org.jeecg.modules.link.entity;
 
-import java.io.Serializable;
-import java.util.Date;
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableName;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
-import com.fasterxml.jackson.annotation.JsonFormat;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.jeecgframework.poi.excel.annotation.Excel;
 
 /**
  * @Description: 收货记录
  * @Author: jeecg-boot
- * @Date:   2024-06-20
+ * @Date:   2024-07-03
  * @Version: V1.0
  */
 @Data
@@ -31,59 +25,67 @@ public class ShjlXs {
 	/**shdjbh*/
 	@Excel(name = "shdjbh", width = 15)
     @ApiModelProperty(value = "shdjbh")
-	private java.lang.String shdjbh;
+	private String shdjbh;
+	/**ddDjSn*/
+	@Excel(name = "ddDjSn", width = 15)
+    @ApiModelProperty(value = "ddDjSn")
+	private Integer ddDjSn;
+	/**isTq*/
+	@Excel(name = "isTq", width = 15)
+    @ApiModelProperty(value = "isTq")
+	private Integer isTq;
 	/**qiyunrq*/
 	@Excel(name = "qiyunrq", width = 15)
     @ApiModelProperty(value = "qiyunrq")
-	private java.lang.String qiyunrq;
+	private String qiyunrq;
 	/**daohrq*/
 	@Excel(name = "daohrq", width = 15)
     @ApiModelProperty(value = "daohrq")
-	private java.lang.String daohrq;
+	private String daohrq;
 	/**qiywd*/
 	@Excel(name = "qiywd", width = 15)
     @ApiModelProperty(value = "qiywd")
-	private java.lang.String qiywd;
+	private String qiywd;
 	/**chph*/
 	@Excel(name = "chph", width = 15)
     @ApiModelProperty(value = "chph")
-	private java.lang.String chph;
+	private String chph;
 	/**daohwd*/
 	@Excel(name = "daohwd", width = 15)
     @ApiModelProperty(value = "daohwd")
-	private java.lang.String daohwd;
+	private String daohwd;
 	/**yunsgj*/
 	@Excel(name = "yunsgj", width = 15)
     @ApiModelProperty(value = "yunsgj")
-	private java.lang.String yunsgj;
+	private String yunsgj;
 	/**danwbh*/
 	@Excel(name = "danwbh", width = 15)
     @ApiModelProperty(value = "danwbh")
-	private java.lang.String danwbh;
+	private String danwbh;
 	/**dwmch*/
 	@Excel(name = "dwmch", width = 15)
     @ApiModelProperty(value = "dwmch")
-	private java.lang.String dwmch;
+	private String dwmch;
 	/**ontime*/
 	@Excel(name = "ontime", width = 15)
     @ApiModelProperty(value = "ontime")
-	private java.lang.String ontime;
+	private String ontime;
 	/**bm*/
 	@Excel(name = "bm", width = 15)
     @ApiModelProperty(value = "bm")
-	private java.lang.String bm;
+	private String bm;
 	/**rq*/
 	@Excel(name = "rq", width = 15)
     @ApiModelProperty(value = "rq")
-	private java.lang.String rq;
+	private String rq;
 	/**username*/
 	@Excel(name = "username", width = 15)
     @ApiModelProperty(value = "username")
-	private java.lang.String username;
+	private String username;
 	/**ywy*/
 	@Excel(name = "ywy", width = 15)
     @ApiModelProperty(value = "ywy")
-	private java.lang.String ywy;
+	private String ywy;
 	/**je*/
 	@Excel(name = "je", width = 15)
     @ApiModelProperty(value = "je")
@@ -99,63 +101,63 @@ public class ShjlXs {
 	/**spmch*/
 	@Excel(name = "spmch", width = 15)
     @ApiModelProperty(value = "spmch")
-	private java.lang.String spmch;
+	private String spmch;
 	/**spbh*/
 	@Excel(name = "spbh", width = 15)
     @ApiModelProperty(value = "spbh")
-	private java.lang.String spbh;
+	private String spbh;
 	/**shpgg*/
 	@Excel(name = "shpgg", width = 15)
     @ApiModelProperty(value = "shpgg")
-	private java.lang.String shpgg;
+	private String shpgg;
 	/**dw*/
 	@Excel(name = "dw", width = 15)
     @ApiModelProperty(value = "dw")
-	private java.lang.String dw;
+	private String dw;
 	/**shengccj*/
 	@Excel(name = "shengccj", width = 15)
     @ApiModelProperty(value = "shengccj")
-	private java.lang.String shengccj;
+	private String shengccj;
 	/**shpchd*/
 	@Excel(name = "shpchd", width = 15)
     @ApiModelProperty(value = "shpchd")
-	private java.lang.String shpchd;
+	private String shpchd;
 	/**jixing*/
 	@Excel(name = "jixing", width = 15)
     @ApiModelProperty(value = "jixing")
-	private java.lang.String jixing;
+	private String jixing;
 	/**pizhwh*/
 	@Excel(name = "pizhwh", width = 15)
     @ApiModelProperty(value = "pizhwh")
-	private java.lang.String pizhwh;
+	private String pizhwh;
 	/**chuclx*/
 	@Excel(name = "chuclx", width = 15)
     @ApiModelProperty(value = "chuclx")
-	private java.lang.String chuclx;
+	private String chuclx;
 	/**djbh*/
 	@Excel(name = "djbh", width = 15)
     @ApiModelProperty(value = "djbh")
-	private java.lang.String djbh;
+	private String djbh;
 	/**spid*/
 	@Excel(name = "spid", width = 15)
     @ApiModelProperty(value = "spid")
-	private java.lang.String spid;
+	private String spid;
 	/**djSn*/
 	@Excel(name = "djSn", width = 15)
     @ApiModelProperty(value = "djSn")
-	private java.lang.Integer djSn;
+	private Integer djSn;
 	/**djSort*/
 	@Excel(name = "djSort", width = 15)
     @ApiModelProperty(value = "djSort")
-	private java.lang.Integer djSort;
+	private Integer djSort;
 	/**recnum*/
 	@Excel(name = "recnum", width = 15)
     @ApiModelProperty(value = "recnum")
-	private java.lang.Integer recnum;
+	private Integer recnum;
 	/**baozhshl*/
 	@Excel(name = "baozhshl", width = 15)
     @ApiModelProperty(value = "baozhshl")
-	private java.lang.Integer baozhshl;
+	private Integer baozhshl;
 	/**lingsshl*/
 	@Excel(name = "lingsshl", width = 15)
     @ApiModelProperty(value = "lingsshl")
@@ -179,35 +181,36 @@ public class ShjlXs {
 	/**pihao*/
 	@Excel(name = "pihao", width = 15)
     @ApiModelProperty(value = "pihao")
-	private java.lang.String pihao;
+	private String pihao;
 	/**ph*/
 	@Excel(name = "ph", width = 15)
     @ApiModelProperty(value = "ph")
-	private java.lang.String ph;
+	private String ph;
 	/**sxrq*/
 	@Excel(name = "sxrq", width = 15)
     @ApiModelProperty(value = "sxrq")
-	private java.lang.String sxrq;
+	private String sxrq;
 	/**baozhiqi*/
 	@Excel(name = "baozhiqi", width = 15)
     @ApiModelProperty(value = "baozhiqi")
-	private java.lang.String baozhiqi;
+	private String baozhiqi;
 	/**shzid*/
 	@Excel(name = "shzid", width = 15)
     @ApiModelProperty(value = "shzid")
-	private java.lang.String shzid;
+	private String shzid;
 	/**shzname*/
 	@Excel(name = "shzname", width = 15)
     @ApiModelProperty(value = "shzname")
-	private java.lang.String shzname;
+	private String shzname;
 	/**shzgsid*/
 	@Excel(name = "shzgsid", width = 15)
     @ApiModelProperty(value = "shzgsid")
-	private java.lang.String shzgsid;
+	private String shzgsid;
 	/**njsbj*/
 	@Excel(name = "njsbj", width = 15)
     @ApiModelProperty(value = "njsbj")
-	private java.lang.String njsbj;
+	private String njsbj;
+
 	@TableField(exist = false)
-	private java.lang.String js;
+	private String js;
 }

@@ -20,5 +20,15 @@ public interface PuArrivalVouchMapper extends BaseMapper<PuArrivalVouch> {
     @Select("select * from PU_ArrivalVouch where iBillType = 0 and cCode = #{code} ")
     PuArrivalVouch getDaoHuoByCode(String code);
 
+    @Select("select * from PU_ArrivalVouch where id = #{id} ")
+    PuArrivalVouch getVouchById(String id);
+
+    /**
+     *
+     * @return
+     */
+    @Select("select * from PU_ArrivalVouch where cAuditDate is not null and bNegative= N'1'  and cBusType <> N'委外加工' and isnull(cvouchtype,'') <> N'IM26' and isnull(cvouchtype,'') <> N'IM27' and iBillType = N'1' and PU_ArrivalVouch.ID NOT IN (SELECT ErpID FROM u8Link..TuiHuoLink)")
+    List<PuArrivalVouch> getTuiHuo();
+
 
 }

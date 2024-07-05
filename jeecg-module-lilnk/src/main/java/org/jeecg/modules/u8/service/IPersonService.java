@@ -10,5 +10,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
  * @Version: V1.0
  */
 public interface IPersonService extends IService<Person> {
+    Person getByName(String name);
 
+    String getCodeByName(String name);
 }

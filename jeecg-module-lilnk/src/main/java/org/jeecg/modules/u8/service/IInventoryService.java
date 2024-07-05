@@ -13,4 +13,6 @@ import java.util.List;
  */
 public interface IInventoryService extends IService<Inventory> {
     List<Inventory> selectNoSyn();
+
+    Long getHuanSuanLv(String unitCode);
 }

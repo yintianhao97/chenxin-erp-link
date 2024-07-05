@@ -1,7 +1,11 @@
 package org.jeecg.modules.link.service;
 
+import org.apache.ibatis.annotations.Select;
+import org.jeecg.modules.link.entity.ShjlXs;
 import org.jeecg.modules.link.entity.YsjlXs;
 import com.baomidou.mybatisplus.extension.service.IService;
+
+import java.util.List;
 
 /**
  * @Description: 验收记录
@@ -11,4 +15,18 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface IYsjlXsService extends IService<YsjlXs> {
 
+
+
+    List<String> getCodeListGroupCodeCai();
+
+
+    List<String> getCodeListGroupCodeTui();
+
+
+
+
+    List<YsjlXs> getListByCode(String code);
+
+
+    int updateIsTq(String ysdjbh);
 }

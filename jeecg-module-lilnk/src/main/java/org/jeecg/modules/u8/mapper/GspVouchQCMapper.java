@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.baomidou.dynamic.datasource.annotation.DS;
 import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Select;
 import org.jeecg.modules.u8.entity.GspVouchQC;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 
@@ -15,5 +16,11 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
  */
 @DS("U8")
 public interface GspVouchQCMapper extends BaseMapper<GspVouchQC> {
+    @Select("select * from GSP_VouchQC where QCID = #{vouchCode} ")
+    GspVouchQC selectVouchByCode(String vouchCode);
+
+
+
+
 
 }

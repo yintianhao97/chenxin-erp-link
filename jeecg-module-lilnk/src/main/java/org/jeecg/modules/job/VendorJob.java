@@ -100,7 +100,7 @@ public class VendorJob {
 
                 //货主公司ID 1
                 //TODO: 随便写一个先
-                cjkjcwldw.setShzgsid("L08");
+                cjkjcwldw.setShzgsid("HXS");
                 cjkjcwldw.setSkhyh("");
                 cjkjcwldw.setSzh("");
                 cjkjcwldw.setSsh("");

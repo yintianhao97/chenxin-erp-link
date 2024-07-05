@@ -160,7 +160,7 @@ public class CrudTest {
             cjkjcspxx.setN4g(new BigDecimal("0"));
 
             //货主公司id
-            cjkjcspxx.setShzgsid("L08");
+            cjkjcspxx.setShzgsid("HXS");
 
 
 
@@ -221,7 +221,7 @@ public class CrudTest {
 
             //货主公司ID
             //TODO: 随便写一个先
-            cjkjcwldw.setShzgsid("L08");
+            cjkjcwldw.setShzgsid("HXS");
             cjkjcwldw.setSkhyh("");
             cjkjcwldw.setSzh("");
             cjkjcwldw.setSsh("");
@@ -324,10 +324,10 @@ public class CrudTest {
             //部门名称
             cjkdjckjhderp.setSbm("");
             //货主ID
-            cjkdjckjhderp.setShzid("L08");
+            cjkdjckjhderp.setShzid("HXS");
             cjkdjckjhderp.setShzname("");
             //货主公司ID
-            cjkdjckjhderp.setShzgsid("L08");
+            cjkdjckjhderp.setShzgsid("HXS");
             //收货人
             cjkdjckjhderp.setShouhr("");
             //收货地址
@@ -394,12 +394,12 @@ public class CrudTest {
 
 
                 //货主表示
-                cjkdjckjhdmxerp.setShzid("L08");
+                cjkdjckjhdmxerp.setShzid("HXS");
 
                 //备注
                 cjkdjckjhdmxerp.setSbz(lists.getCmemo());
                 //货主公司ID
-                cjkdjckjhdmxerp.setShzgsid("L08");
+                cjkdjckjhdmxerp.setShzgsid("HXS");
                 cjkdjckjhdmxerp.setDgxsj(new Date());
                 //仓库ID
                 //cjkdjckjhdmxerp.setSgsid(lists.getCwhcode());
@@ -442,11 +442,11 @@ public class CrudTest {
             cjkwmsrkhz.setUsername(rdrecord10.getCmaker());
             cjkwmsrkhz.setYwy(rdrecord10.getCmaker());
 
-            cjkwmsrkhz.setDwbh(rdrecord10.getCdepcode());
+            cjkwmsrkhz.setDwbh(rdrecord10.getCvencode());
 
             ///货主id? 产成品入库哪里来的供货商
-            cjkwmsrkhz.setShzid("L08");
-            cjkwmsrkhz.setShzgsid("L08");
+            cjkwmsrkhz.setShzid("HXS");
+            cjkwmsrkhz.setShzgsid("HXS");
 
             cjkwmsrkhz.setSgsid("0101");
 
@@ -511,9 +511,9 @@ public class CrudTest {
                 //有效期
                 //cjkwmsrkmx.setSxrq(cexpirationdate);
                 //货主id
-                cjkwmsrkmx.setShzid("L08");
+                cjkwmsrkmx.setShzid("HXS");
                 //货主公司ID
-                cjkwmsrkmx.setShzgsid("L08");
+                cjkwmsrkmx.setShzgsid("HXS");
                 //更新日期
                 cjkwmsrkmx.setDgxsj(new Date());
                 //仓库ID

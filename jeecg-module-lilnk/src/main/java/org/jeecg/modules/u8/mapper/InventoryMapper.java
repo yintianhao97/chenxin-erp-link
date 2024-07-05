@@ -23,6 +23,8 @@ public interface InventoryMapper extends BaseMapper<Inventory> {
     List<Inventory> selectNoSyn();
 
 
+    @Select("select iChangRate  FROM  computationUnit where cComunitCode = #{unitCode}")
+    Long getHuanSuanLv(String unitCode);
 
     @Select("select * from Inventory where  cInvCode = 'C03048'")
     Inventory selectCodeC03048();

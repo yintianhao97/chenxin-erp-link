@@ -24,4 +24,9 @@ public class InventoryServiceImpl extends ServiceImpl<InventoryMapper, Inventory
     public List<Inventory> selectNoSyn() {
         return inventoryMapper.selectNoSyn();
     }
+
+    @Override
+    public Long getHuanSuanLv(String unitCode) {
+        return inventoryMapper.getHuanSuanLv(unitCode);
+    }
 }

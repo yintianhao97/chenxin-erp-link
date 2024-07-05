@@ -11,4 +11,5 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface IGspVouchQCService extends IService<GspVouchQC> {
 
+    GspVouchQC getByCodeCai(String code);
 }

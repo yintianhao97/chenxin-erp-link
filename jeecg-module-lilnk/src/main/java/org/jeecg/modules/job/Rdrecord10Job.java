@@ -40,7 +40,7 @@ public class Rdrecord10Job {
     /**
      * 产成品入库更新   应该是不用
      */
-    @Scheduled(cron = "0 0/5 * * * ? ")
+    //@Scheduled(cron = "0 0/5 * * * ? ")
     public void rdJob() {
         log.info("Rdrecord10Job定时任务开始执行");
         List<Rdrecord10> list = rdrecord10Service.selectNoSyn();
@@ -71,13 +71,13 @@ public class Rdrecord10Job {
             cjkwmsrkhz.setUsername(rdrecord10.getCmaker());
             cjkwmsrkhz.setYwy(rdrecord10.getCmaker());
 
-            cjkwmsrkhz.setDwbh(rdrecord10.getCdepcode());
+            cjkwmsrkhz.setDwbh(rdrecord10.getCvencode());
 
             ///货主id? 产成品入库哪里来的供货商
-            cjkwmsrkhz.setShzid("L08");
-            cjkwmsrkhz.setShzgsid("L08");
+            cjkwmsrkhz.setShzid("HXS");
+            cjkwmsrkhz.setShzgsid("HXS");
 
-            cjkwmsrkhz.setSgsid("0101");
+            //cjkwmsrkhz.setSgsid("0101");
 
             //System.out.println(cjkwmsrkhz);
             boolean save = icjkwmsrkhzService.save(cjkwmsrkhz);
@@ -140,9 +140,9 @@ public class Rdrecord10Job {
                 //有效期
                 //cjkwmsrkmx.setSxrq(cexpirationdate);
                 //货主id
-                cjkwmsrkmx.setShzid("L08");
+                cjkwmsrkmx.setShzid("HXS");
                 //货主公司ID
-                cjkwmsrkmx.setShzgsid("L08");
+                cjkwmsrkmx.setShzgsid("HXS");
                 //更新日期
                 cjkwmsrkmx.setDgxsj(new Date());
                 //仓库ID

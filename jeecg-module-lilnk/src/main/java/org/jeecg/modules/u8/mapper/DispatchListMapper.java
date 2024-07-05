@@ -17,13 +17,13 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 @DS("U8")
 public interface DispatchListMapper extends BaseMapper<DispatchList> {
     @Select("select * from DispatchList\n" +
-            "where cVouchType = '05' and bReturnFlag = '0' and DispatchList.DLID NOT IN (SELECT ErpID FROM u8Link..DispatchListLink)")
+            "where cVouchType = '05' and dverifydate is not null and bReturnFlag = '0' and DispatchList.DLID NOT IN (SELECT ErpID FROM u8Link..DispatchListLink)")
     List<DispatchList> selectNoSynFa();
 
 
 
     @Select("select * from DispatchList\n" +
-            "where cVouchType = '05' and bReturnFlag = '1' and DispatchList.DLID NOT IN (SELECT ErpID FROM u8Link..DispatchListLink)")
+            "where cVouchType = '05' and dverifydate is not null and isnull(bReturnFlag,0)=1 and  isnull(bfirst,0)=0 and DispatchList.DLID NOT IN (SELECT ErpID FROM u8Link..DispatchListLink)")
     List<DispatchList> selectNoSynTui();
 
 

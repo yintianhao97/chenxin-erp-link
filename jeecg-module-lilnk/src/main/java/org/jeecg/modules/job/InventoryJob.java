@@ -41,56 +41,61 @@ public class InventoryJob {
             CJKJCSPXX cjkjcspxx = new CJKJCSPXX();
             cjkjcspxx.setId(inventoryId.longValue());
             cjkjcspxx.setNgxbj(1);
+            //接收标记(0，未接收；1，接收成功；2，处理失败)   1
             cjkjcspxx.setNjsbj(0);
-            //erp id
+            //erp code 1
             cjkjcspxx.setSjkspid(inventory.getCinvcode());
-            //erp id
+            //erp code 1
             cjkjcspxx.setSspbm(inventory.getCinvcode());
-            //名称
+            //名称 1
             cjkjcspxx.setSspmc(inventory.getCinvname());
-            //规格
+            //规格 1
             cjkjcspxx.setSspgg(inventory.getCinvstd());
-            //产地
-            cjkjcspxx.setSspcd(inventory.getCaddress());
-
+            //产地 1
+            cjkjcspxx.setSspcd(inventory.getCinvdefine4());
+            //SZJM	VARCHAR2(40)	N	助记码 1
             String cinvmnemcode = inventory.getCinvmnemcode();
             if (cinvmnemcode == null || cinvmnemcode.equals("")) {
                 cjkjcspxx.setSzjm(inventory.getCinvname());
             }else {
                 cjkjcspxx.setSzjm(cinvmnemcode);
             }
-            //有效标记
+            //有效标记 1
             cjkjcspxx.setNyxbj(1L);
-            //批准文号
+            //批准文号 1
             cjkjcspxx.setSpjwh(inventory.getCfile());
             //生产厂家????
-            cjkjcspxx.setSsccj(inventory.getCenterprise());
-
+            cjkjcspxx.setSsccj(inventory.getCinvdefine9());
+            // 中包装规格(箱,条,盒) 不能为0   1
             cjkjcspxx.setN4zbzgg(1L);
-            //单位重量
+            //计量规格，不能为0  1
             Float iinvweight = inventory.getIinvweight();
             if (iinvweight == null) {
                 iinvweight = 9999f;
             }
             cjkjcspxx.setNjlgg(iinvweight.longValue());
-            //是否监管
+            //是否监管 1
             cjkjcspxx.setNsfjg(0);
-            //包装单位名称
-            cjkjcspxx.setSjldw(inventory.getCenterprise());
+            //包装单位名称 1
+            cjkjcspxx.setSjldw(inventory.getCpackingtype());
             //时间戳
-            cjkjcspxx.setSsjc("");
-            //备注
+            //cjkjcspxx.setSsjc("");
+//            商品分组类型 ERP没有  1  TODO:U8创建一个必填的 参照类型
+            cjkjcspxx.setSfzlx("602");
+
+            //备注 1
             cjkjcspxx.setSbz("");
-            //创建时间
+            //创建时间 1
             cjkjcspxx.setDcjrq(new Date());
-            //更新时间
+            //更新时间 1
             cjkjcspxx.setDgxrq(new Date());
-            //是否二验药
+            //是否精神药品(0否    1是) 1
             cjkjcspxx.setNjsyp(0);
-            //是否冷藏
+            //是否冷藏 1
             cjkjcspxx.setNncbj(0);
-            //存储类型
+            //存储类型 1
             cjkjcspxx.setNsfzy(0);
+            //中药：26；二类精神：22；大输液：21；原料药：29；中药材：25；普通药品：0；食品：30；冷库：23；非药品：24 1
             cjkjcspxx.setNlx(0);
 
            /* cjkjcspxx.setNyxbz(0);
@@ -100,13 +105,12 @@ public class InventoryJob {
             //分组类型
             //cjkjcspxx.setSspfq("");
 
-            cjkjcspxx.setSfzlx("602");
             cjkjcspxx.setN4c(new BigDecimal("0"));
             cjkjcspxx.setN4k(new BigDecimal("0"));
             cjkjcspxx.setN4g(new BigDecimal("0"));
 
             //货主公司id
-            cjkjcspxx.setShzgsid("L08");
+            cjkjcspxx.setShzgsid("HXS");
 
 
             System.out.println(cjkjcspxx.toString());

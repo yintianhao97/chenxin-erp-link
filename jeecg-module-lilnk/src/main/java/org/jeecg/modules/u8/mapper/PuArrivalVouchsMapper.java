@@ -3,9 +3,9 @@ package org.jeecg.modules.u8.mapper;
 import java.util.List;
 
 import com.baomidou.dynamic.datasource.annotation.DS;
-import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
+import org.jeecg.modules.u8.entity.PuArrivalVouch;
 import org.jeecg.modules.u8.entity.PuArrivalVouchs;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 
@@ -21,6 +21,15 @@ public interface PuArrivalVouchsMapper extends BaseMapper<PuArrivalVouchs> {
     @Select("select * from PU_ArrivalVouchs where id = #{id}")
     List<PuArrivalVouchs> getDaohuoFByID(String id);
 
+
+    @Select("select * from PU_ArrivalVouchs where Autoid = #{id}")
+    PuArrivalVouchs getDaohuoFByAutoID(String id);
+
+
+    @Select("select * from PU_ArrivalVouchs where id = #{id} and ivouchrowno = #{row}")
+    PuArrivalVouchs getByIdAndRow(String id, String row);
+
+
     @Update("UPDATE PU_ArrivalVouchs\n" +
             "SET fRealQuantity = COALESCE(fRealQuantity, 0) + #{shishou},   -- 实收数量 \n" +
             " fValidQuantity = COALESCE(fValidQuantity, 0) + #{hege},    -- 验收数量 - 拒收数量 = 合格数量\n" +
@@ -28,5 +37,5 @@ public interface PuArrivalVouchsMapper extends BaseMapper<PuArrivalVouchs> {
             " fInspectQuantity = COALESCE(fInspectQuantity, 0) + #{leijibaojian}, --累计包间数量\n" +
             " fInspectNum = COALESCE(fInspectNum, 0) + #{leijibaojianjian}  --累计报检件数 \n" +
             "WHERE Autoid = #{autoid}")
-    void updateYanShou(String autoid, Long shishou, Long hege, Long buhege, Long leijibaojian, Long leijibaojianjian);
+    int updateYanShou(String autoid, Long shishou, Long hege, Long buhege, Long leijibaojian, Long leijibaojianjian);
 }

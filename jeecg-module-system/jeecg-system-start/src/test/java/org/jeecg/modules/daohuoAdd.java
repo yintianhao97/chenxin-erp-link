@@ -47,7 +47,8 @@ public class daohuoAdd {
 
         List<ShjlXs> shjlXs = shjlXsMapper1.selectList(new QueryWrapper<ShjlXs>());
         for (ShjlXs shjlX : shjlXs) {
-            PoPodetails byCodeRow = poPodetailsMapper.getByCodeRow(shjlX.getDjbh(), shjlX.getDjSn().toString());
+            //PoPodetails byCodeRow = poPodetailsMapper.getByCodeRow(shjlX.getDjbh(), shjlX.getDjSn().toString());
+            PoPodetails byCodeRow = poPodetailsMapper.getByPoidRow(shjlX.getDjbh(), shjlX.getDjSn().toString());
             BigDecimal div = NumberUtil.div(byCodeRow.getIquantity(), byCodeRow.getInum(), 2);
             BigDecimal shl = shjlX.getShl();
             BigDecimal div1 = NumberUtil.div(shl, div, 2);
@@ -57,7 +58,7 @@ public class daohuoAdd {
             String jsonString = JSON.toJSONString(shjlX);
             System.out.println(jsonString);
 
-            String targetUrl = "http://localhost:51404/U8API/AddDaoHuo";
+            String targetUrl = U8LinkConstant.U8_LINK_URL + "/U8API/AddDaoHuo";
             String jsonBody = jsonString;
 
             try {
