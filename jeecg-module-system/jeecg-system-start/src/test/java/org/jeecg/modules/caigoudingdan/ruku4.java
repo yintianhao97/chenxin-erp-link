@@ -50,7 +50,7 @@ public class ruku4 {
     private PersonMapper personMapper;
 
     @Test
-    public void Test1() {
+    public void ruKu() {
 
         List<SjjlXs> sjjlXs = sjjlXsMapper.selectChu();
 
@@ -155,7 +155,7 @@ public class ruku4 {
                     JSONObject jsonObject = new JSONObject(string1);
                     String string = jsonObject.getString("code");
                     if ("0".equals(string)) {
-                        sjjlXsMapper.deleteByYSDH(ysdh);
+                        sjjlXsMapper.update1ByYSDH(ysdh);
                     }
                 }
             }  catch (IOException | JSONException e) {

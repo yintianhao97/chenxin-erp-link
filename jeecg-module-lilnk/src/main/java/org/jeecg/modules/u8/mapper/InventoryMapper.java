@@ -19,7 +19,7 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 public interface InventoryMapper extends BaseMapper<Inventory> {
     @Select("SELECT *\n" +
             "FROM Inventory\n" +
-            "WHERE  Inventory.cInvCode NOT IN (SELECT ErpID FROM u8Link..InventoryLink);")
+            "WHERE  Inventory.cInvCode NOT IN (SELECT ErpID FROM u8Link..InventoryLink) and cInvCCode not LIKE  '20004%' and cInvCCode not LIKE  '20006%' and cInvCCode not LIKE  '20008%'\n")
     List<Inventory> selectNoSyn();
 
 

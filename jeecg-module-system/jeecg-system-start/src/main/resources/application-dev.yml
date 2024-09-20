@@ -160,20 +160,25 @@ spring:
           slow-sql-millis: 5000
       datasource:
         master:
-          url: jdbc:sqlserver://frp-bus.top:56445;SelectMethod=cursor;DatabaseName=u8Link
+          url: jdbc:sqlserver://127.0.0.1:1433;SelectMethod=cursor;DatabaseName=u8Link
           username: sa
-          password: abc.123
+          password: Cx_xsu8*129
           driver-class-name: com.microsoft.sqlserver.jdbc.SQLServerDriver
         U8:
-          url: jdbc:sqlserver://frp-bus.top:56445;SelectMethod=cursor;DatabaseName=UFDATA_015_2020
+          url: jdbc:sqlserver://127.0.0.1:1433;SelectMethod=cursor;DatabaseName=UFDATA_901_2024
           username: sa
-          password: abc.123
+          password: Cx_xsu8*129
+          driver-class-name: com.microsoft.sqlserver.jdbc.SQLServerDriver
+        U8sys:
+          url: jdbc:sqlserver://127.0.0.1:1433;SelectMethod=cursor;DatabaseName=UFSystem
+          username: sa
+          password: Cx_xsu8*129
           driver-class-name: com.microsoft.sqlserver.jdbc.SQLServerDriver
         link:
           driver-class-name: oracle.jdbc.OracleDriver
-          url: jdbc:oracle:thin:@222.174.68.78:19527:gjtjk
-          username: gjt_jk
-          password: Jk123789
+          url: jdbc:oracle:thin:@222.132.93.2:15821:sfjk
+          username: trsfjk
+          password: 123456
           druid:
             validation-query: SELECT 1 FROM DUAL
   #redis 配置

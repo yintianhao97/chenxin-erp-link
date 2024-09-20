@@ -19,6 +19,7 @@ public interface ShjlXsMapper extends BaseMapper<ShjlXs> {
 
     @Select("SELECT SHDJBH\n" +
             "FROM shjl_xs\n" +
+            "where IS_TQ !=1\n" +
             "GROUP BY SHDJBH")
     List<String> getCodeListGroupCode();
 

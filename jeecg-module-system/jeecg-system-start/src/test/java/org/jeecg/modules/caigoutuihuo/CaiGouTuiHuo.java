@@ -64,7 +64,7 @@ public class CaiGouTuiHuo {
 
     //@Scheduled(cron = "0 0/5 * * * ? ")
     @Test
-    public void run() {
+    public void caiGouTuiHuo() {
         List<PuArrivalVouch> tuiHuo = iPuArrivalVouchService.getTuiHuo();
         for (PuArrivalVouch puArrivalVouch : tuiHuo) {
 

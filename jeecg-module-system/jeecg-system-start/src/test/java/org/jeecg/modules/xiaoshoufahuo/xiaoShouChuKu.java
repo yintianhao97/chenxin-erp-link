@@ -51,7 +51,7 @@ public class xiaoShouChuKu {
      */
     //@Scheduled(cron = "0 0/5 * * * ? ")
     @Test
-    public void dlJob() {
+    public void xiaoShouChuKu() {
 
         List<DispatchList> dispatchLists =
                 dispatchListService.selectNoSynFa();

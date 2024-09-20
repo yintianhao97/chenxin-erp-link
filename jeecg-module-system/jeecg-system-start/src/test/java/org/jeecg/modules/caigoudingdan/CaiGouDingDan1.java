@@ -47,7 +47,7 @@ public class CaiGouDingDan1 {
      * 采购订单更新
      */
     @Test
-    public void rdJob() {
+    public void caiGouDingDan() {
         //log.info("Rdrecord10Job定时任务开始执行");
         List<PoPomain> poPomains = iPoPomainService.selectNoSyn();
 
@@ -124,4 +124,6 @@ public class CaiGouDingDan1 {
         }
 
     }
+
+
 }

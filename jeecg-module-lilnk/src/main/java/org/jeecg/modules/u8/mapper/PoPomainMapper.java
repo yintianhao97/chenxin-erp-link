@@ -19,9 +19,9 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 public interface PoPomainMapper extends BaseMapper<PoPomain> {
 
 
-    @Select("select * " +
-            "from PO_Pomain " +
-            "WHERE cAuditDate is not null and poid NOT IN (SELECT ErpID FROM u8Link..PoPomainLink);")
+    @Select("select m.* from PO_Pomain m\n" +
+            "join PO_Pomain_extradefine d on m.POID=d.POID\n" +
+            "WHERE d.chdefine15 = '山东天瑞' and m.cAuditDate is not null and m.poid NOT IN (SELECT ErpID FROM u8Link..PoPomainLink);")
     List<PoPomain> selectNoSyn();
 
     @Select("select * from PO_Pomain where POID =#{id}")

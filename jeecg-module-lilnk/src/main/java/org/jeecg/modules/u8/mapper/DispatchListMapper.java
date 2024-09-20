@@ -16,14 +16,16 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
  */
 @DS("U8")
 public interface DispatchListMapper extends BaseMapper<DispatchList> {
-    @Select("select * from DispatchList\n" +
-            "where cVouchType = '05' and dverifydate is not null and bReturnFlag = '0' and DispatchList.DLID NOT IN (SELECT ErpID FROM u8Link..DispatchListLink)")
+    @Select("select m.* from DispatchList m\n" +
+            "join DispatchList_extradefine d on m.DLID=d.DLID\n" +
+            "where d.chdefine15 = '山东天瑞' and m.cVouchType = '05' and m.dverifydate is not null and m.bReturnFlag = '0' and m.DLID NOT IN (SELECT ErpID FROM u8Link..DispatchListLink);\n")
     List<DispatchList> selectNoSynFa();
 
 
 
-    @Select("select * from DispatchList\n" +
-            "where cVouchType = '05' and dverifydate is not null and isnull(bReturnFlag,0)=1 and  isnull(bfirst,0)=0 and DispatchList.DLID NOT IN (SELECT ErpID FROM u8Link..DispatchListLink)")
+    @Select("select m.* from DispatchList m\n" +
+            "join DispatchList_extradefine d on m.DLID=d.DLID\n" +
+            "where  d.chdefine15 = '山东天瑞' and m.cVouchType = '05' and m.dverifydate is not null and isnull(m.bReturnFlag,0)=1 and  isnull(m.bfirst,0)=0 and m.DLID NOT IN (SELECT ErpID FROM u8Link..DispatchListLink);\n")
     List<DispatchList> selectNoSynTui();
 
 

@@ -58,7 +58,7 @@ public class XiaoShouTuiHuo1 {
      */
     //@Scheduled(cron = "0 0/5 * * * ? ")
     @Test
-    public void run() {
+    public void xiaoShouTuiHuo() {
         List<DispatchList> dispatchLists = dispatchListService.selectNoSynTui();
 
         for (DispatchList dispatchList : dispatchLists) {

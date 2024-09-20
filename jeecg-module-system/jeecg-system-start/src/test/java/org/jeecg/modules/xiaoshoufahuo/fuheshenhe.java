@@ -57,7 +57,7 @@ public class fuheshenhe {
 
 
     @Test
-    public void run(){
+    public void fuHeShenHe(){
 
         List<String> ids = fhjlXsMapper.SelectXiaoShouFaHuo();
         for (String nckdidString : ids) {
@@ -160,13 +160,6 @@ public class fuheshenhe {
 
     public void shenhe(String id){
 
-/*        //发货单号
-        DispatchList byCode = dispatchListMapper.getByCode("0000000019");
-        String cdlcode = byCode.getCdlcode();
-        //根据发货单查询 出库单
-        List<Rdrecords32> byCbdlcode = rdrecords32Mapper.getByCbdlcode(cdlcode);*/
-
- /*       Integer id = byCbdlcode.get(0).getId();*/
 
         String targetUrl = U8LinkConstant.U8_LINK_URL + "/U8API/ReViewChuKu?id="+id.toString();
         String vouchCode = null;

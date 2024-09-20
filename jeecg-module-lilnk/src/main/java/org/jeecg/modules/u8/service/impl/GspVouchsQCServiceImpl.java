@@ -24,4 +24,9 @@ public class GspVouchsQCServiceImpl extends ServiceImpl<GspVouchsQCMapper, GspVo
     public List<GspVouchsQC> selectByIdAndRow(String id, String row) {
         return gspVouchsQCM.selectByIdAndRow(id, row);
     }
+
+    @Override
+    public List<GspVouchsQC> selectByTid(String tid) {
+        return gspVouchsQCM.selectByTid(tid);
+    }
 }

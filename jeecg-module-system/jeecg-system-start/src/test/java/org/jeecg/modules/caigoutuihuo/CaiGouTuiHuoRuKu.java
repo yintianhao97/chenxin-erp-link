@@ -63,9 +63,10 @@ public class CaiGouTuiHuoRuKu {
 
 
     @Test
-    public void add2() {
+    public void yanShouShenHe() {
 
         List<String> fhjlXs = fhjlXsMapper.SelectCaiGouTuiHuo();
+
         for (String fhjlX : fhjlXs) {
             List<FhjlXs> fhjlXs1 = fhjlXsMapper.selectByNckdid(fhjlX);
             FhjlXs fhjlXs2 = fhjlXs1.get(0);
@@ -162,7 +163,7 @@ public class CaiGouTuiHuoRuKu {
                     JSONObject jsonObject = new JSONObject(string1);
                     String string = jsonObject.getString("code");
                     if ("0".equals(string)) {
-                        fhjlXsMapper.updateIsTQ(fhjlX);
+                        fhjlXsMapper.updateIsTQ(fhjlXs2.getNckdid().toString());
                         this.addGSP_VOUCHUNSALABLE(jsonObject.getString("VouchCode"),fhjlXs2.getSwfhymc());
                     }
                 }
@@ -220,7 +221,7 @@ public class CaiGouTuiHuoRuKu {
         Date currentDate2 = new Date(calendar.getTimeInMillis());
 
 
-        int i1 = gspVouchUnsalableMapper.addVouchT(String.valueOf(forecastid), str, new Date(), id, rdRecord01.getCcode(),
+        int i1 = gspVouchUnsalableMapper.addVouchT(String.valueOf(forecastid), str, currentDate2, id, rdRecord01.getCcode(),
                 rdRecord01.getDgatheringdate(), rdRecord01.getCvencode(), vouchById.getCmaker(), vouchById.getCmaker(),"demo",rdRecord01.getCwhcode(),currentDate2,new Date());
         if (i1 > 0) {
 
@@ -268,6 +269,7 @@ public class CaiGouTuiHuoRuKu {
 
 
         }
+
         String jsonString = "{}";
         String targetUrl = U8LinkConstant.U8_LINK_URL + "/U8API/ReViewCaiGouRuKu?id="+id;
         OkHttpClient client = new OkHttpClient()
@@ -290,19 +292,11 @@ public class CaiGouTuiHuoRuKu {
                 // 打印响应体
                 String string1 = response.body().string();
                 System.out.println(string1);
-/*                JSONObject jsonObject = new JSONObject(string1);
-                String string = jsonObject.getString("code");*/
-
             }
         }  catch (IOException e) {
             throw new RuntimeException(e);
         }
-
-
-
     }
-
-
 }
 
 

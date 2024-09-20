@@ -2,6 +2,7 @@ package org.jeecg.modules;
 
 import com.alibaba.fastjson.JSONObject;
 import com.aliyuncs.exceptions.ClientException;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import org.jeecg.JeecgSystemApplication;
 import org.jeecg.common.api.dto.message.BusMessageDTO;
 import org.jeecg.common.api.dto.message.BusTemplateMessageDTO;
@@ -84,6 +85,18 @@ public class CrudTest {
     private IlinkAutoIdService ilinkAutoIdService;
     @Autowired
     private InventoryMapper inventoryMapper;
+
+
+    @Test
+    public void test() {
+        List<Inventory> inventorys = inventoryMapper.selectList(new QueryWrapper<>());
+        for (int i = 0; i < inventorys.size(); i++) {
+            Inventory inventory = inventorys.get(i);
+            Long huanSuanLv = inventoryService.getHuanSuanLv(inventory.getCstcomunitcode());
+            System.out.println(huanSuanLv);
+        }
+    }
+
     @Test
     public void inventory() {
         linkAutoId linkAutoId = ilinkAutoIdService.selectBy1();

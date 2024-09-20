@@ -12,6 +12,7 @@ import org.jeecg.modules.u8.service.ICustomerService;
 import org.jeecg.modules.u8.service.IInventoryService;
 import org.jeecg.modules.u8.service.IVendorService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
@@ -43,18 +44,19 @@ public class JiChuDangAnJob {
     private IVendorLinkService iVendorLinkService;
 
 
-    //@Scheduled(cron = "0 0/5 * * * ? ")
+    @Scheduled(cron = "0 0/5 * * * ? ")
     public void JiChuDangAnJobRun() {
-        log.info("基础档案job开始");
+        log.info("==========基础档案job开始==========");
         this.inventoryJob();
         this.Venjob();
         this.customerJob();
-        log.info("基础档案job结束");
+        log.info("==========基础档案job结束==========");
     }
 
     /**
      * 同步商品
      */
+    //@Scheduled(cron = "0 0,10,20,30,40,50 * * * ? ")
     public void inventoryJob() {
         log.info("商品同步开始");
         linkAutoId linkAutoId = ilinkAutoIdService.selectBy1();
@@ -113,7 +115,7 @@ public class JiChuDangAnJob {
             cjkjcspxx.setSjldw(computationUnit.getCcomunitname());
             //时间戳
             //cjkjcspxx.setSsjc("");
-//            商品分组类型 ERP没有  1  TODO:U8创建一个必填的 参照类型
+//            商品分组类型 ERP没有  1
             cjkjcspxx.setSfzlx(inventory.getCinvdefine2());
 
             //备注 1
@@ -123,12 +125,35 @@ public class JiChuDangAnJob {
             //更新时间 1
             cjkjcspxx.setDgxrq(new Date());
             //是否精神药品(0否    1是) 1
-            cjkjcspxx.setNjsyp(Integer.parseInt(inventory.getBspecialties().toString()));
+            String string1 = inventory.getBspecialties().toString();
+            if(string1.equals("false")){
+                cjkjcspxx.setNjsyp(0);
+            }else {
+                cjkjcspxx.setNjsyp(1);
+            }
+
+            //是否首营状态
+            String string = inventory.getBfirstbusimedicine().toString();
+            if (string.equals("false")) {
+                cjkjcspxx.setNsybj(0);
+            }else {
+                cjkjcspxx.setNsybj(1);
+            }
+
+
 
             //存储类型 1
-            cjkjcspxx.setNsfzy(Integer.parseInt(inventory.getCinvdefine4()));
+            String cinvdefine4 = inventory.getCinvdefine4();
+            int dashIndex = cinvdefine4.indexOf("-");
+            String substring = cinvdefine4.substring(0, dashIndex);
+            cjkjcspxx.setNsfzy(Integer.parseInt(substring));
+
+
             //中药：26；二类精神：22；大输液：21；原料药：29；中药材：25；普通药品：0；食品：30；冷库：23；非药品：24 1
-            int i = Integer.parseInt(inventory.getCinvdefine3());
+            String cinvdefine3 = inventory.getCinvdefine3();
+
+            int i = Integer.parseInt(substring);
+
             cjkjcspxx.setNlx(i);
             //是否冷藏 1
             if (i == 23) {
@@ -138,9 +163,9 @@ public class JiChuDangAnJob {
             }
 
 
-
-           /* cjkjcspxx.setNyxbz(0);
-            cjkjcspxx.setNgmpbj(0);
+            //是否异性包装
+            cjkjcspxx.setNyxbz(0);
+            /*cjkjcspxx.setNgmpbj(0);
             cjkjcspxx.setNgspbj(0);
             cjkjcspxx.setNsybj(0);*/
             //分组类型

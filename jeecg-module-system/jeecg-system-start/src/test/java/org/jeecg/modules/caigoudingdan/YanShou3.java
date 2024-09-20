@@ -49,7 +49,7 @@ public class YanShou3 {
     private IYsjlXsService iYsjlXsService;
 
     @Test
-    public void Test1() {
+    public void yanShou() {
 
         List<String> codeListGroupCode = iYsjlXsService.getCodeListGroupCodeCai();
         //获取所有待同步验收单据

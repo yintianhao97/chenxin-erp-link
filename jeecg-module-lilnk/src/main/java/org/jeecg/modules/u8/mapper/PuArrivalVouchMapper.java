@@ -27,7 +27,9 @@ public interface PuArrivalVouchMapper extends BaseMapper<PuArrivalVouch> {
      *
      * @return
      */
-    @Select("select * from PU_ArrivalVouch where cAuditDate is not null and bNegative= N'1'  and cBusType <> N'委外加工' and isnull(cvouchtype,'') <> N'IM26' and isnull(cvouchtype,'') <> N'IM27' and iBillType = N'1' and PU_ArrivalVouch.ID NOT IN (SELECT ErpID FROM u8Link..TuiHuoLink)")
+    @Select("select m.* from PU_ArrivalVouch  m\n" +
+            "join PU_ArrivalVouch_extradefine d on m.id=d.id\n" +
+            "where d.chdefine15 = '山东天瑞' and m.cAuditDate is not null and m.bNegative= N'1'  and m.cBusType <> N'委外加工' and isnull(m.cvouchtype,'') <> N'IM26' and isnull(m.cvouchtype,'') <> N'IM27' and m.iBillType = N'1' and m.ID NOT IN (SELECT ErpID FROM u8Link..TuiHuoLink);\n")
     List<PuArrivalVouch> getTuiHuo();
 
 

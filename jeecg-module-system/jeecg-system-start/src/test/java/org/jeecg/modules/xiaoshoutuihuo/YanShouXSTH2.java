@@ -41,7 +41,7 @@ public class YanShouXSTH2 {
     private IGspVouchsQCService iGspVouchsQCService;
 
     @Test
-    public void run() {
+    public void yanShou() {
         List<String> codeListGroupCodeTui = ysjlXsMapper.getCodeListGroupCodeTui();
         for (String s : codeListGroupCodeTui) {
             List<YsjlXs> listByCode = ysjlXsMapper.getListByCode(s);

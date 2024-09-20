@@ -42,13 +42,12 @@ public class daohuoAdd2 {
 
     @Autowired
     private IShjlXsService iShjlXsService;
-    @Autowired
-    private PersonMapper personMapper;
+
     @Autowired
     private PoPodetailsMapper poPodetailsMapper;
 
     @Test
-    public void add1(){
+    public void daoHuo(){
         //先查询所有单据
         List<String> codeListGroupCode = iShjlXsService.getCodeListGroupCode();
         for (String s : codeListGroupCode) {

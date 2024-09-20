@@ -13,4 +13,7 @@ import java.util.List;
  */
 public interface IGspVouchsQCService extends IService<GspVouchsQC> {
     List<GspVouchsQC> selectByIdAndRow(String id, String row);
+
+
+    List<GspVouchsQC> selectByTid(String tid);
 }

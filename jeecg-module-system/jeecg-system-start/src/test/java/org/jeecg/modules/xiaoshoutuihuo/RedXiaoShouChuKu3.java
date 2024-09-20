@@ -46,7 +46,7 @@ public class RedXiaoShouChuKu3 {
     private GspVouchQCMapper gspVouchQCMapper;
 
     @Test
-    public void add2(){
+    public void xiaoShouChuKu(){
 
         List<SjjlXs> sjjlXs = sjjlXsMapper.selectTui();
         for (SjjlXs sjjlX : sjjlXs) {
@@ -133,7 +133,7 @@ public class RedXiaoShouChuKu3 {
             if (insert > 0) {
                 System.out.println("成功");
                 uaIdentityMapper.iFatherIdAdd("rd", U8LinkConstant.U8_LINK_CACC_ID);
-                int i = sjjlXsMapper.deleteBysdydjbh(sdydjbh);
+                int i = sjjlXsMapper.update1Bysdydjbh(sdydjbh);
             }
 
             int row = 1;
