@@ -46,6 +46,12 @@ public class daohuoAdd2 {
     @Autowired
     private PoPodetailsMapper poPodetailsMapper;
 
+
+    @Test
+    public void aaa111(){
+        boolean jhgwms00100663 = iShjlXsService.updateIsTqInt("JHGWMS00100663");
+    }
+
     @Test
     public void daoHuo(){
         //先查询所有单据

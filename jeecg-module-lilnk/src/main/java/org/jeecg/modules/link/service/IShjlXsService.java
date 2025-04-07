@@ -20,5 +20,5 @@ public interface IShjlXsService extends IService<ShjlXs> {
     List<ShjlXs> getListByCode(String code);
 
 
-    int updateIsTqInt(String code);
+    boolean updateIsTqInt(String code);
 }

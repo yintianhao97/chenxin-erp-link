@@ -80,7 +80,7 @@ public class InventoryJob {
             cjkjcspxx.setSjldw(inventory.getCpackingtype());
             //时间戳
             //cjkjcspxx.setSsjc("");
-//            商品分组类型 ERP没有  1  TODO:U8创建一个必填的 参照类型
+//            商品分组类型 ERP没有  1  U8创建一个必填的 参照类型
             cjkjcspxx.setSfzlx("602");
 
             //备注 1

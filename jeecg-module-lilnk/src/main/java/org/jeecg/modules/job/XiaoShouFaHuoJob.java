@@ -23,6 +23,7 @@ import java.io.InputStreamReader;
 import java.math.BigDecimal;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
@@ -72,24 +73,19 @@ public class XiaoShouFaHuoJob {
     private Rdrecords32Mapper rdrecords32Mapper;
     @Autowired
     private Rdrecord32Mapper rdrecord32Mapper;
-
-
-
-
     @Autowired
     private ICJKWMSRKHZService icjkwmsrkhzService;
     @Autowired
     private ICJKWMSRKMXService icjkwmsrkmxService;
-
     @Autowired
     private YsjlXsMapper ysjlXsMapper;
-
     @Autowired
     private SjjlXsMapper sjjlXsMapper;
     @Autowired
     private GspVouchsQCMapper gspVouchsQCMapper;
     @Autowired
     private GspVouchQCMapper gspVouchQCMapper;
+
 
     @Scheduled(cron = "0 5,15,25,35,45,55 * * * ? ")
     public void XiaoShouFaHuoJobRun() {
@@ -107,7 +103,7 @@ public class XiaoShouFaHuoJob {
 
 
     public void xiaoShouChuKu() {
-
+        //cinvoicecompany
         List<DispatchList> dispatchLists =
                 dispatchListService.selectNoSynFa();
         for (DispatchList dispatchList : dispatchLists) {
@@ -118,8 +114,8 @@ public class XiaoShouFaHuoJob {
             cjkdjckjhderp.setSjsbz("0");
             //接口ID
             cjkdjckjhderp.setSjkid(dispatchList.getDlid().toString());
-            //单位ID 1 TODO: 客户么
-            cjkdjckjhderp.setSwldwid(dispatchList.getCcuscode());
+            //单位ID 1
+            cjkdjckjhderp.setSwldwid(dispatchList.getCinvoicecompany());
             //出库类型2采购出库 1
             cjkdjckjhderp.setNcklx(2L);
             //提货方式0未定义 1
@@ -167,11 +163,12 @@ public class XiaoShouFaHuoJob {
             cjkdjckjhderp.setSbm(dispatchList.getCdepcode());
             //货主ID 1
             cjkdjckjhderp.setShzid("HXS");
-
+            //收货地址
+            cjkdjckjhderp.setSzwdz(dispatchList.getCshipaddress());
 
             //货主公司ID 1
             cjkdjckjhderp.setShzgsid("HXS");
-
+            log.info("表头:{}",cjkdjckjhderp);
             boolean save = icjkdjckjhderpService.save(cjkdjckjhderp);
 
             if (save) {
@@ -203,8 +200,9 @@ public class XiaoShouFaHuoJob {
                 cjkdjckjhdmxerp.setN4sjsl(new BigDecimal(0));
                 //
                 cjkdjckjhdmxerp.setN4lsslCh(new BigDecimal(0));
+
                 //含税价 1
-                cjkdjckjhdmxerp.setN4dj(new BigDecimal(lists.getIsum().toString()));
+                cjkdjckjhdmxerp.setN4dj(new BigDecimal(lists.getItaxunitprice().toString()));
                 //批号 1
                 cjkdjckjhdmxerp.setSph(lists.getCbatch());
 //                cjkdjckjhdmxerp.setSph("lists.getCbatch()");
@@ -213,7 +211,7 @@ public class XiaoShouFaHuoJob {
                 //生产日期 1
                 cjkdjckjhdmxerp.setDscrq(lists.getDmdate());
                 //有效日期 1
-                cjkdjckjhdmxerp.setDyxqz(lists.getDvdate());
+                cjkdjckjhdmxerp.setDyxqz(lists.getDexpirationdate());
 
 
 
@@ -231,8 +229,9 @@ public class XiaoShouFaHuoJob {
                 //cjkdjckjhdmxerp.setDgxsj(new Date());
                 //仓库ID
                 //cjkdjckjhdmxerp.setSgsid(lists.getCwhcode());
-                System.out.println(cjkdjckjhdmxerp);
-                System.out.println(icjkdjckjhdmxerpService.save(cjkdjckjhdmxerp));
+                log.info(cjkdjckjhdmxerp.toString());
+                boolean save1 = icjkdjckjhdmxerpService.save(cjkdjckjhdmxerp);
+                log.info("保存结果:{}",save1);
             }
 
 
@@ -249,17 +248,27 @@ public class XiaoShouFaHuoJob {
             FhjlXs fhjlX = fhjlXs.get(0);
 
             //获取ID
-            UaIdentity uaIdentity = uaIdentityMapper.selectOne(new QueryWrapper<UaIdentity>().eq("cVouchType", "GSP_VouchNote").eq("cAcc_Id", 900));
+            UaIdentity uaIdentity = uaIdentityMapper.selectOne(new QueryWrapper<UaIdentity>().eq("cVouchType", "GSP_VouchNote").eq("cAcc_Id", U8LinkConstant.U8_LINK_CACC_ID));
             int id = uaIdentity.getIfatherid();
             int forecastid = id + 1000000001;
 
             //发货单号
             DispatchList byCode = dispatchListMapper.getById(fhjlX.getSjkid());
 
-            int i1 = gspVouchNoteMapper.addVouchNote(String.valueOf(forecastid), fhjlX.getNckdid().toString(), "demo", null,new Date());
+            SimpleDateFormat ft = new SimpleDateFormat("yyyy-MM-dd");
+            String time = fhjlX.getDzdrq();
+            Date date = new Date();
+            try {
+                 date = ft.parse(time);
+            } catch (ParseException e) {
+                throw new RuntimeException(e);
+            }
+            String cdefine10 = byCode.getCdefine10();
+
+            int i1 = gspVouchNoteMapper.addVouchNote(cdefine10,String.valueOf(forecastid), fhjlX.getNckdid().toString(), fhjlX.getSwfhymc(), null,date);
             if (i1 >0){
 
-                System.out.println("添加成功");
+                log.info("添加成功");
                 fhjlXsMapper.updateIsTQ(nckdidString);
                 uaIdentityMapper.iFatherIdAdd("GSP_VouchNote", U8LinkConstant.U8_LINK_CACC_ID);
             }
@@ -274,13 +283,19 @@ public class XiaoShouFaHuoJob {
 
                 GspVouchsNote gspVouchsNote = new GspVouchsNote();
 
-                UaIdentity uaIdentity1 = uaIdentityMapper.selectOne(new QueryWrapper<UaIdentity>().eq("cVouchType", "GSP_VouchNote").eq("cAcc_Id", 900));
+                UaIdentity uaIdentity1 = uaIdentityMapper.selectOne(new QueryWrapper<UaIdentity>().eq("cVouchType", "GSP_VouchNote").eq("cAcc_Id", U8LinkConstant.U8_LINK_CACC_ID));
                 int ichildid = uaIdentity1.getIchildid();
                 ichildid = ichildid + 1000000001;
 
 
                 gspVouchsNote.setId(forecastid);
                 gspVouchsNote.setAutoid(ichildid);
+
+                gspVouchsNote.setCresult("合格");
+                //采购单位编码
+                gspVouchsNote.setCcuscode(byCode.getCcuscode());
+                //发货日期
+                gspVouchsNote.setDarvdate(byCode.getDdate());
                 //存货编码
                 gspVouchsNote.setCinvcode(rdrecords32.getCinvcode());
                 //批号
@@ -294,7 +309,16 @@ public class XiaoShouFaHuoJob {
                 gspVouchsNote.setDprodate(rdrecords32.getDmadedate());
                 //有效期
                 gspVouchsNote.setDvaldate(rdrecords32.getDvdate());
-                //发货单ID //TODO:这里没错就说这样的
+                //
+               /* DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+                Date date1 = null;
+                try {
+                    date1 = df.parse(rdrecords32.getCexpirationdate());
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }*/
+                gspVouchsNote.setCvaldate(rdrecords32.getDexpirationdate());
+                //发货单ID
                 gspVouchsNote.setCwhcode(cdlcode);
 
                 gspVouchsNote.setBflag(0);
@@ -318,7 +342,7 @@ public class XiaoShouFaHuoJob {
                 //出库单号
                 gspVouchsNote.setCcode(rdrecord32.getCcode());
                 //制单人
-                gspVouchsNote.setCshipper("demo");
+                gspVouchsNote.setCshipper("田树厅");
                 //
                 gspVouchsNote.setBzdyh(0);
                 //验收人
@@ -332,7 +356,7 @@ public class XiaoShouFaHuoJob {
                 }
 
             }
-            shenhe(string);
+            //shenhe(string);
 
 
 
@@ -424,8 +448,8 @@ public class XiaoShouFaHuoJob {
                 cjkwmsrkhz.setYwy("");
             }
 
-            //单位内码 1  TODO:这个是供货商CODE
-            cjkwmsrkhz.setDwbh(dispatchList.getCcuscode());
+            //单位内码 1
+            cjkwmsrkhz.setDwbh(dispatchList.getCinvoicecompany());
             ///货主id? 产成品入库哪里来的供货商 1
             cjkwmsrkhz.setShzid("HXS");
             cjkwmsrkhz.setShzgsid("HXS");
@@ -480,13 +504,15 @@ public class XiaoShouFaHuoJob {
 
                 cjkwmsrkmx.setBaozhiqi(dateFormat123.format(lists.getDmdate()));
 
-                cjkwmsrkmx.setSxrq(dateFormat123.format(lists.getDvdate()));
+                cjkwmsrkmx.setSxrq(dateFormat123.format(lists.getDexpirationdate()));
 
                 //货主id 1
                 cjkwmsrkmx.setShzid("HXS");
 
-                System.out.println(cjkwmsrkmx);
-                System.out.println(icjkwmsrkmxService.save(cjkwmsrkmx));
+
+                log.info("cjkwmsrkmx保存:{}",cjkwmsrkmx);
+                boolean save1 = icjkwmsrkmxService.save(cjkwmsrkmx);
+                log.info("cjkwmsrkmx保存结果:{}",save1);
 
             }
 
@@ -506,6 +532,8 @@ public class XiaoShouFaHuoJob {
             String djbh = ysjlXs.getDjbh();
             String thdid = djbh.substring(0, djbh.length() - 1);
             DispatchList byId = dispatchListMapper.getById(thdid);
+            String chdefine16ById = dispatchListMapper.getChdefine16ById(thdid);
+
             Calendar calendar = Calendar.getInstance();
             calendar.setTime(new Date());
             calendar.set(Calendar.HOUR_OF_DAY, 0);
@@ -515,11 +543,14 @@ public class XiaoShouFaHuoJob {
 
             Date currentDate2 = new Date(calendar.getTimeInMillis());
 
-            UaIdentity uaIdentity = uaIdentityMapper.selectOne(new QueryWrapper<UaIdentity>().eq("cVouchType", "GSP_VouchQC").eq("cAcc_Id", 900));
+            UaIdentity uaIdentity = uaIdentityMapper.selectOne(new QueryWrapper<UaIdentity>().eq("cVouchType", "GSP_VouchQC").eq("cAcc_Id", U8LinkConstant.U8_LINK_CACC_ID));
             int id = uaIdentity.getIfatherid();
             int forecastid = id + 1000000001;
             String ysdjbh = ysjlXs.getYsdjbh();
             GspVouchQC gspVouchQC = new GspVouchQC();
+
+            gspVouchQC.setCdefine10(byId.getCdefine10());
+
             gspVouchQC.setId(forecastid);
             //单据编号
             gspVouchQC.setQcid(ysdjbh);
@@ -528,23 +559,21 @@ public class XiaoShouFaHuoJob {
             //到货单code
             gspVouchQC.setCcode(byId.getCdlcode());
             //审核
-            gspVouchQC.setCverifier("demo");
-            gspVouchQC.setDverifydate(currentDate2);
-            gspVouchQC.setDverifysystime(new Date());
+            gspVouchQC.setCverifier(ysjlXs.getYanshr());
+
             //到货日期
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 
             try {
-                Date date = sdf.parse(ysjlXs.getDaohrq());
-                gspVouchQC.setDarvdate(date);
-
+                currentDate2 = sdf.parse(ysjlXs.getDaohrq());
             } catch (ParseException e) {
-                gspVouchQC.setDarvdate(new Date());
                 throw new RuntimeException(e);
             }
-
+            gspVouchQC.setDarvdate(currentDate2);
+            gspVouchQC.setDverifydate(currentDate2);
+            gspVouchQC.setDverifysystime(currentDate2);
             //创建人
-            gspVouchQC.setCmaker("demo");
+            gspVouchQC.setCmaker(ysjlXs.getYanshr());
             //单据日期
             gspVouchQC.setDdate(currentDate2);
 
@@ -552,6 +581,7 @@ public class XiaoShouFaHuoJob {
             gspVouchQC.setCvouchtype("004");
             gspVouchQC.setIvtid(224);
             gspVouchQC.setBrefer("1");
+
             gspVouchQC.setIverifystate(0);
             gspVouchQC.setIreturncount(0);
             gspVouchQC.setIverifystatenew(0);
@@ -574,7 +604,7 @@ public class XiaoShouFaHuoJob {
 
                 Integer djSn = ysjlXslist.getDjSn();
                 djSn = djSn + 1;
-                UaIdentity uaIdentity1 = uaIdentityMapper.selectOne(new QueryWrapper<UaIdentity>().eq("cVouchType", "GSP_VouchQC").eq("cAcc_Id", 900));
+                UaIdentity uaIdentity1 = uaIdentityMapper.selectOne(new QueryWrapper<UaIdentity>().eq("cVouchType", "GSP_VouchQC").eq("cAcc_Id", U8LinkConstant.U8_LINK_CACC_ID));
                 DispatchLists dispatchLists = dispatchListsMapper.selectByDLIDAndRow(byId.getDlid().toString(), ysjlXslist.getDdDjSn().toString());
                 int ids = uaIdentity1.getIchildid();
                 int ichildid = ids + 1000000001;
@@ -601,15 +631,38 @@ public class XiaoShouFaHuoJob {
                 gspVouchsQC.setBmakepurin(0);
                 gspVouchsQC.setBmakesaleout(0);
 
+
+                //外观
+                gspVouchsQC.setCoutinstance(ysjlXslist.getZhilzhk());
+                //退货原因
+                gspVouchsQC.setCbackreason(chdefine16ById);
+
                 gspVouchsQC.setCconclusion("合格");
                 gspVouchsQC.setDdateT(new Date());
                 //生产日期
                 gspVouchsQC.setDprodate(dispatchLists.getDmdate());
                 //到期日期
-                gspVouchsQC.setDvaldate(dispatchLists.getDvdate());
+                gspVouchsQC.setDvdate(dispatchLists.getDvdate());
                 //批号
                 gspVouchsQC.setCbatch(dispatchLists.getCbatch());
-                //
+
+                gspVouchsQC.setDvaldate(dispatchLists.getDexpirationdate());
+
+                DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+                Date date1 = null;
+                try {
+                    date1 = df.parse(ysjlXslist.getSxrq());
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+
+                //有效期
+                gspVouchsQC.setCvaldate(date1);
+                //有效期单位
+                gspVouchsQC.setCmassunit(dispatchLists.getCmassunit());
+                gspVouchsQC.setImassdate(dispatchLists.getImassdate());
+
+
                 gspVouchsQC.setCcuscode(byId.getCcuscode());
 
                 gspVouchsQC.setIcodeT(dispatchLists.getIdlsid());
@@ -632,7 +685,8 @@ public class XiaoShouFaHuoJob {
                 boolean save1 = iGspVouchsQCService.save(gspVouchsQC);
 
                 if (save1) {
-                    System.out.println("添加成功");
+                    iGspVouchsQCService.installChouJian(String.valueOf(ichildid),ysjlXslist.getChoujshl());
+                    log.info("添加成功:{}",gspVouchsQC);
                     uaIdentityMapper.iChildIdAdd("GSP_VouchQC", U8LinkConstant.U8_LINK_CACC_ID);
                 }
 
@@ -649,7 +703,7 @@ public class XiaoShouFaHuoJob {
         List<SjjlXs> sjjlXs = sjjlXsMapper.selectTui();
         for (SjjlXs sjjlX : sjjlXs) {
 
-            UaIdentity uaIdentity = uaIdentityMapper.selectOne(new QueryWrapper<UaIdentity>().eq("cVouchType", "rd").eq("cAcc_Id", 900));
+            UaIdentity uaIdentity = uaIdentityMapper.selectOne(new QueryWrapper<UaIdentity>().eq("cVouchType", "rd").eq("cAcc_Id", U8LinkConstant.U8_LINK_CACC_ID));
             int id = uaIdentity.getIfatherid();
             int forecastid = id + 1000000001;
 
@@ -666,6 +720,7 @@ public class XiaoShouFaHuoJob {
             String sdydjbh = sjjlX.getSdydjbh();
 
             Rdrecord32 rdrecord32 = new Rdrecord32();
+            rdrecord32.setCdefine10(byId.getCdefine10());
             //ID
             rdrecord32.setId(forecastid);
             //code
@@ -691,9 +746,10 @@ public class XiaoShouFaHuoJob {
             calendar.set(Calendar.MILLISECOND, 0);
 
             Date currentDate2 = new Date(calendar.getTimeInMillis());
-            rdrecord32.setChandler("demo");
+            //不审核了
+            /*rdrecord32.setChandler("田树厅");
             rdrecord32.setDveridate(currentDate2);
-            rdrecord32.setDnverifytime(new Date());
+            rdrecord32.setDnverifytime(new Date());*/
 
             //日期
             rdrecord32.setDdate(currentDate2);
@@ -706,13 +762,13 @@ public class XiaoShouFaHuoJob {
             rdrecord32.setCcuscode(byId.getCcuscode());
             rdrecord32.setCdlcode(Integer.parseInt(thdid));
             rdrecord32.setBtransflag(0);
-            rdrecord32.setCmaker("demo");
+            rdrecord32.setCmaker("田树厅");
             rdrecord32.setBpufirst(0);
             rdrecord32.setBiafirst(0);
             rdrecord32.setCchkcode(ysdh);
             rdrecord32.setDchkdate(currentDate2);
 
-            rdrecord32.setCchkperson("demo");
+            rdrecord32.setCchkperson("田树厅");
             rdrecord32.setVtId(87);
             rdrecord32.setBisstqc(0);
             //不知道是啥
@@ -732,7 +788,7 @@ public class XiaoShouFaHuoJob {
             int insert = rdrecord32Mapper.insert(rdrecord32);
 
             if (insert > 0) {
-                System.out.println("成功");
+                log.info("插入成功:{}",rdrecord32);
                 uaIdentityMapper.iFatherIdAdd("rd", U8LinkConstant.U8_LINK_CACC_ID);
                 int i = sjjlXsMapper.update1Bysdydjbh(sdydjbh);
             }
@@ -743,7 +799,7 @@ public class XiaoShouFaHuoJob {
                 Integer dlid = byId.getDlid();
                 DispatchLists dispatchLists = dispatchListsMapper.selectByDLIDAndRow(dlid.toString(), sjjlX.getDjSn().toString());
 
-                UaIdentity uaIdentity1 = uaIdentityMapper.selectOne(new QueryWrapper<UaIdentity>().eq("cVouchType", "rd").eq("cAcc_Id", 900));
+                UaIdentity uaIdentity1 = uaIdentityMapper.selectOne(new QueryWrapper<UaIdentity>().eq("cVouchType", "rd").eq("cAcc_Id", U8LinkConstant.U8_LINK_CACC_ID));
                 int ids = uaIdentity1.getIchildid();
                 int ichildid = ids + 1000000001;
 
@@ -758,10 +814,31 @@ public class XiaoShouFaHuoJob {
 
                 rdrecords32.setCbatch(gspVouchsQC.getCbatch());
                 rdrecords32.setIflag(0);
+
+                //失效日期
                 rdrecords32.setDvdate(gspVouchsQC.getDvdate());
+                //生产日期
+                rdrecords32.setDmadedate(gspVouchsQC.getDprodate());
+
+                Date cvaldate = gspVouchsQC.getCvaldate();
+
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+                // 使用format方法将Date对象转换为String对象
+                String dateStr = sdf.format(cvaldate);
+
+                //有效期至
+                rdrecords32.setIexpiratdatecalcu(1);
+                rdrecords32.setCexpirationdate(dateStr);
+                rdrecords32.setDexpirationdate(cvaldate);
+
+
+
+
+                rdrecords32.setCmassunit(gspVouchsQC.getCmassunit());
+                rdrecords32.setImassdate(gspVouchsQC.getImassdate());
+
                 rdrecords32.setIdlsid(gspVouchsQC.getIcodeT());
                 rdrecords32.setCassunit(gspVouchsQC.getCunitid());
-                rdrecords32.setDmadedate(gspVouchsQC.getDprodate());
                 rdrecords32.setIcheckids(gspVouchsQC.getAutoid());
                 rdrecords32.setBlpusefree(0);
                 rdrecords32.setIrsrowno(0);
@@ -780,8 +857,8 @@ public class XiaoShouFaHuoJob {
                 if (insert1 > 0) {
                     rdrecords32Mapper.updateDispatchLists(dispatchLists.getAutoid().toString(), felgquantity, felgquantitys);
                     rdrecords32Mapper.updateGspVouchsQC(gspVouchsQC.getAutoid().toString(), felgquantity, felgquantitys);
-                    rdrecords32Mapper.updateCurrentStock(felgquantity,gspVouchsQC.getCinvcode(), gspVouchsQC.getCbatch());
-                    System.out.println("成功");
+                    //rdrecords32Mapper.updateCurrentStock(felgquantity,gspVouchsQC.getCinvcode(), gspVouchsQC.getCbatch());
+                    log.info("rdrecords32插入成功:{}",rdrecords32);
                     uaIdentityMapper.iChildIdAdd("rd", U8LinkConstant.U8_LINK_CACC_ID);
                 }
 

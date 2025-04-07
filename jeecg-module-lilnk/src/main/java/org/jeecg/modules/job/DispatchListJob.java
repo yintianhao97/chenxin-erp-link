@@ -14,6 +14,7 @@ import org.jeecg.modules.link.service.ICJKDJCKJHDERPService;
 import org.jeecg.modules.link.service.ICJKDJCKJHDMXERPService;
 import org.jeecg.modules.link.service.IDispatchListLinkService;
 import org.jeecg.modules.u8.entity.DispatchList;
+
 import org.jeecg.modules.u8.entity.DispatchLists;
 import org.jeecg.modules.u8.service.IDispatchListService;
 import org.jeecg.modules.u8.service.IDispatchListsService;
@@ -60,7 +61,7 @@ public class DispatchListJob {
             //接口ID
             cjkdjckjhderp.setSjkid(dispatchList.getDlid().toString());
             //单位ID 1
-            cjkdjckjhderp.setSwldwid(dispatchList.getCcuscode());
+            cjkdjckjhderp.setSwldwid(dispatchList.getCinvoicecompany());
             //出库类型2采购出库 1
             cjkdjckjhderp.setNcklx(2L);
             //提货方式0未定义 1
@@ -190,7 +191,7 @@ public class DispatchListJob {
 
             cjkdjckjhderp.setDgxsj(new Date());
             cjkdjckjhderp.setSgsid("");
-            //线上线下? todo:这个怎么判断
+            //线上线下?
             cjkdjckjhderp.setNdjlx(0);
 
             //ID
@@ -202,7 +203,7 @@ public class DispatchListJob {
             //接口ID
             cjkdjckjhderp.setSjkid(dispatchList.getCdlcode());
             //单位ID
-            cjkdjckjhderp.setSwldwid(dispatchList.getCcuscode());
+            cjkdjckjhderp.setSwldwid(dispatchList.getCinvoicecompany());
             //出库类型2采购出库
             cjkdjckjhderp.setNcklx(2L);
             //提货方式0未定义

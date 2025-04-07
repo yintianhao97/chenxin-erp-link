@@ -1,8 +1,11 @@
 package org.jeecg.modules.u8.mapper;
 
+import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.List;
 
 import com.baomidou.dynamic.datasource.annotation.DS;
+import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
 import org.jeecg.modules.u8.entity.PuArrivalVouch;
@@ -38,4 +41,7 @@ public interface PuArrivalVouchsMapper extends BaseMapper<PuArrivalVouchs> {
             " fInspectNum = COALESCE(fInspectNum, 0) + #{leijibaojianjian}  --累计报检件数 \n" +
             "WHERE Autoid = #{autoid}")
     int updateYanShou(String autoid, Long shishou, Long hege, Long buhege, Long leijibaojian, Long leijibaojianjian);
+
+    @Insert("INSERT INTO gsp_vouchsqc_extradefine ( AUTOID,cbdefine2) VALUES (#{autoid}, #{cbdefine2});")
+    int installChouJian(String autoid, BigDecimal cbdefine2);
 }

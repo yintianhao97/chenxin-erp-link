@@ -32,7 +32,7 @@ public class ShjlXsServiceImpl extends ServiceImpl<ShjlXsMapper, ShjlXs> impleme
     }
 
     @Override
-    public int updateIsTqInt(String code) {
+    public boolean updateIsTqInt(String code) {
         return shjlXsMapper.updateIsTqInt(code);
     }
 }

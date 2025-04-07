@@ -21,9 +21,8 @@ public interface FhjlXsMapper extends BaseMapper<FhjlXs> {
 
 
 
-/*    @Select("select * from fhjl_xs where NCKLX = '2' and SWFHYMC !=null and IS_TQ!=1 ;")
+    /*@Select("select * from fhjl_xs where NCKLX = '2' and SWFHYMC !=null and IS_TQ!=1 ;")
     List<FhjlXs> SelectXiaoShouFaHuo();
-
     @Select("select * from fhjl_xs where NCKLX = '3' and SWFHYMC !=null and IS_TQ!=1;")
     List<FhjlXs> SelectCaiGouTuiHuo();*/
 

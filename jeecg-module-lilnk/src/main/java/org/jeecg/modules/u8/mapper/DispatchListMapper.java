@@ -8,6 +8,7 @@ import org.apache.ibatis.annotations.Select;
 import org.jeecg.modules.u8.entity.DispatchList;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 
+
 /**
  * @Description: 发货单主表
  * @Author: jeecg-boot
@@ -16,15 +17,17 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
  */
 @DS("U8")
 public interface DispatchListMapper extends BaseMapper<DispatchList> {
-    @Select("select m.* from DispatchList m\n" +
+    @Select("select e.cCusName as 'newccusname',m.* from DispatchList m\n" +
             "join DispatchList_extradefine d on m.DLID=d.DLID\n" +
-            "where d.chdefine15 = '山东天瑞' and m.cVouchType = '05' and m.dverifydate is not null and m.bReturnFlag = '0' and m.DLID NOT IN (SELECT ErpID FROM u8Link..DispatchListLink);\n")
+            "join Customer e on m.cInvoiceCompany = e.cCusCode\n" +
+            "where d.chdefine15 = '山东天瑞' and m.cVouchType = '05' and m.dverifydate is not null and m.bReturnFlag = '0' and m.DLID NOT IN (SELECT ErpID FROM u8Link..DispatchListLink);")
     List<DispatchList> selectNoSynFa();
 
 
 
-    @Select("select m.* from DispatchList m\n" +
+    @Select("select e.cCusName as 'newccusname',m.* from DispatchList m\n" +
             "join DispatchList_extradefine d on m.DLID=d.DLID\n" +
+            "join Customer e on m.cInvoiceCompany = e.cCusCode\n" +
             "where  d.chdefine15 = '山东天瑞' and m.cVouchType = '05' and m.dverifydate is not null and isnull(m.bReturnFlag,0)=1 and  isnull(m.bfirst,0)=0 and m.DLID NOT IN (SELECT ErpID FROM u8Link..DispatchListLink);\n")
     List<DispatchList> selectNoSynTui();
 
@@ -34,5 +37,8 @@ public interface DispatchListMapper extends BaseMapper<DispatchList> {
 
     @Select("select * from DispatchList where cDLCode = #{code}")
     DispatchList getByCode(String code);
+
+    @Select("select chdefine16 from DispatchList_extradefine where DLID = #{id}")
+    String getChdefine16ById(String id);
 
 }

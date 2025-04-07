@@ -1,8 +1,10 @@
 package org.jeecg.modules.u8.mapper;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import com.baomidou.dynamic.datasource.annotation.DS;
+import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 import org.jeecg.modules.u8.entity.GspVouchQC;
@@ -25,4 +27,8 @@ public interface GspVouchsQCMapper extends BaseMapper<GspVouchsQC> {
             "FROM GSP_VouchsQC\n" +
             "WHERE id = #{id} and REVERSE(SUBSTRING(REVERSE(CBSYSBARCODE), 1, CHARINDEX('|', REVERSE(CBSYSBARCODE)) - 1)) = #{row};")
     List<GspVouchsQC> selectByIdAndRow(String id, String row);
+
+
+    @Insert("INSERT INTO GSP_VouchsQC_extradefine ( AUTOID,cbdefine2) VALUES (#{autoid}, #{cbdefine2});")
+    int installChouJian(String autoid, BigDecimal cbdefine2);
 }

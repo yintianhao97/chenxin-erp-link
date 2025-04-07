@@ -32,10 +32,6 @@ public interface SjjlXsMapper extends BaseMapper<SjjlXs> {
     @Select("select * from SJJL_Xs WHERE YSDH = #{YSDH} and IS_TQ!=1;")
     List<String> selectByYsdh(String YSDH);
 
-
-
-
-
     //DELETE FROM SJJL_Xs
     //WHERE SDYDJBH = #{};
 

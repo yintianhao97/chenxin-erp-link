@@ -15,5 +15,6 @@ public interface IlinkAutoIdService extends IService<linkAutoId> {
     int uptateCustomerIdAdd();
 
     int uptateInventoryIdAdd();
+
     linkAutoId selectBy1();
 }

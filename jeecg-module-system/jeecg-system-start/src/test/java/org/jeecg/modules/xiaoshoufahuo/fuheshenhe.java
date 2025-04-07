@@ -72,7 +72,7 @@ public class fuheshenhe {
             //发货单号
             DispatchList byCode = dispatchListMapper.getById(fhjlX.getSjkid());
 
-            int i1 = gspVouchNoteMapper.addVouchNote(String.valueOf(forecastid), fhjlX.getNckdid().toString(), "demo", null,new Date());
+            int i1 = gspVouchNoteMapper.addVouchNote(byCode.getCdefine10(),String.valueOf(forecastid), fhjlX.getNckdid().toString(), "demo", null,new Date());
             if (i1 >0){
 
                 System.out.println("添加成功");

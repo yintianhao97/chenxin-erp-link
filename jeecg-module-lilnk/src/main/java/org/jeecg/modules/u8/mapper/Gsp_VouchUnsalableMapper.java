@@ -32,8 +32,13 @@ public interface Gsp_VouchUnsalableMapper extends BaseMapper<Gsp_VouchUnsalable>
      * @param zdrName 制单人
      * @return 数据库变化条数
      */
-    @Insert("insert into GSP_VOUCHUNSALABLE(ID,cVouchCode,cVouchType,cDepCode,dDate,iRdId,cRdCode,dArvdate,cVenCode,cRdMaker,cMaker,cVerifier,cMemo,cWhCode,bRefer,Vt_id,cDefine1,cDefine2,cDefine3,cDefine4,cDefine5,cDefine6,cDefine7,cDefine8,cDefine9,cDefine10,cDefine11,cDefine12,cDefine13,cDefine14,cDefine15,cDefine16,IsWfControlled,iVerifyState,cCurrentAuditor,cmodifier,dmoddate,dverifydate,dverifysystime,dmodifysystime) " +
+   /* @Insert("insert into GSP_VOUCHUNSALABLE(ID,cVouchCode,cVouchType,cDepCode,dDate,iRdId,cRdCode,dArvdate,cVenCode,cRdMaker,cMaker,cVerifier,cMemo,cWhCode,bRefer,Vt_id,cDefine1,cDefine2,cDefine3,cDefine4,cDefine5,cDefine6,cDefine7,cDefine8,cDefine9,cDefine10,cDefine11,cDefine12,cDefine13,cDefine14,cDefine15,cDefine16,IsWfControlled,iVerifyState,cCurrentAuditor,cmodifier,dmoddate,dverifydate,dverifysystime,dmodifysystime) " +
             "values(#{id}, #{code},'091',Null,#{ddate},#{cgrkId}, #{cgrkCode},#{dhdate}, #{gysCode}, #{thrName}, #{zdrName},#{shName},Null, #{ckCode},1,Null,Null,Null,Null,Null,Null,Null,Null,Null,Null,Null,Null,Null,Null,Null,Null,Null,0,0,Null,Null,Null,#{shDate},#{shTime},Null)")
     int addVouchT(String id, String code, Date ddate, String cgrkId, String cgrkCode, Date dhdate, String gysCode, String thrName, String zdrName, String shName,String ckCode,Date shDate,Date shTime);
+*/
+
+    @Insert("INSERT INTO GSP_VOUCHUNSALABLE(ID,cVouchCode,cVouchType,cDepCode,dDate,iRdId,cRdCode,dArvdate,cVenCode,cRdMaker,cMaker,cVerifier,cMemo,cWhCode,bRefer,Vt_id,cDefine1,cDefine2,cDefine3,cDefine4,cDefine5,cDefine6,cDefine7,cDefine8,cDefine9,cDefine10,cDefine11,cDefine12,cDefine13,cDefine14,cDefine15,cDefine16,IsWfControlled,iVerifyState,cCurrentAuditor,cmodifier,dmoddate,dverifydate,dverifysystime,dmodifysystime) \n" +
+            "VALUES(#{id},#{code},'091',NULL,#{ddate},#{cgrkId},#{cgrkCode},#{dhdate},#{gysCode},#{thrName},#{zdrName},#{shName},NULL,#{ckCode},1,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,#{cDefine12},NULL,NULL,NULL,NULL,0,0,NULL,NULL,NULL,#{shDate},#{shTime},NULL)")
+    int addVouchT(String cDefine12,String id, String code, Date ddate, String cgrkId, String cgrkCode, Date dhdate, String gysCode, String thrName, String zdrName, String shName,String ckCode,Date shDate,Date shTime);
 
 }

@@ -107,7 +107,7 @@ public class XiaoShouTuiHuoJob {
                 cjkwmsrkhz.setYwy("");
             }
 
-            //单位内码 1  TODO:这个是供货商CODE
+            //单位内码 1
             cjkwmsrkhz.setDwbh(dispatchList.getCcuscode());
             ///货主id? 产成品入库哪里来的供货商 1
             cjkwmsrkhz.setShzid("HXS");
@@ -198,7 +198,7 @@ public class XiaoShouTuiHuoJob {
 
             Date currentDate2 = new Date(calendar.getTimeInMillis());
 
-            UaIdentity uaIdentity = uaIdentityMapper.selectOne(new QueryWrapper<UaIdentity>().eq("cVouchType", "GSP_VouchQC").eq("cAcc_Id", 900));
+            UaIdentity uaIdentity = uaIdentityMapper.selectOne(new QueryWrapper<UaIdentity>().eq("cVouchType", "GSP_VouchQC").eq("cAcc_Id", U8LinkConstant.U8_LINK_CACC_ID));
             int id = uaIdentity.getIfatherid();
             int forecastid = id + 1000000001;
             String ysdjbh = ysjlXs.getYsdjbh();
@@ -257,7 +257,7 @@ public class XiaoShouTuiHuoJob {
 
                 Integer djSn = ysjlXslist.getDjSn();
                 djSn = djSn + 1;
-                UaIdentity uaIdentity1 = uaIdentityMapper.selectOne(new QueryWrapper<UaIdentity>().eq("cVouchType", "GSP_VouchQC").eq("cAcc_Id", 900));
+                UaIdentity uaIdentity1 = uaIdentityMapper.selectOne(new QueryWrapper<UaIdentity>().eq("cVouchType", "GSP_VouchQC").eq("cAcc_Id", U8LinkConstant.U8_LINK_CACC_ID));
                 DispatchLists dispatchLists = dispatchListsMapper.selectByDLIDAndRow(byId.getDlid().toString(), ysjlXslist.getDdDjSn().toString());
                 int ids = uaIdentity1.getIchildid();
                 int ichildid = ids + 1000000001;
@@ -332,7 +332,7 @@ public class XiaoShouTuiHuoJob {
         List<SjjlXs> sjjlXs = sjjlXsMapper.selectTui();
         for (SjjlXs sjjlX : sjjlXs) {
 
-            UaIdentity uaIdentity = uaIdentityMapper.selectOne(new QueryWrapper<UaIdentity>().eq("cVouchType", "rd").eq("cAcc_Id", 900));
+            UaIdentity uaIdentity = uaIdentityMapper.selectOne(new QueryWrapper<UaIdentity>().eq("cVouchType", "rd").eq("cAcc_Id", U8LinkConstant.U8_LINK_CACC_ID));
             int id = uaIdentity.getIfatherid();
             int forecastid = id + 1000000001;
 
@@ -423,7 +423,7 @@ public class XiaoShouTuiHuoJob {
                 Integer dlid = byId.getDlid();
                 DispatchLists dispatchLists = dispatchListsMapper.selectByDLIDAndRow(dlid.toString(), sjjlX.getDjSn().toString());
 
-                UaIdentity uaIdentity1 = uaIdentityMapper.selectOne(new QueryWrapper<UaIdentity>().eq("cVouchType", "rd").eq("cAcc_Id", 900));
+                UaIdentity uaIdentity1 = uaIdentityMapper.selectOne(new QueryWrapper<UaIdentity>().eq("cVouchType", "rd").eq("cAcc_Id", U8LinkConstant.U8_LINK_CACC_ID));
                 int ids = uaIdentity1.getIchildid();
                 int ichildid = ids + 1000000001;
 

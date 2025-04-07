@@ -60,6 +60,7 @@ public class JiChuDangAnJob {
     public void inventoryJob() {
         log.info("商品同步开始");
         linkAutoId linkAutoId = ilinkAutoIdService.selectBy1();
+
         Integer inventoryId = linkAutoId.getInventoryId();
 
         List<Inventory> inventories = inventoryService.selectNoSyn();
@@ -73,6 +74,8 @@ public class JiChuDangAnJob {
             cjkjcspxx.setNjsbj(0);
             //erp code 1
             cjkjcspxx.setSjkspid(inventory.getCinvcode());
+            //上市許可持有人
+            cjkjcspxx.setSscyr(inventory.getCinvdefine8());
             //erp code 1
             cjkjcspxx.setSspbm(inventory.getCinvcode());
             //名称 1
@@ -81,6 +84,8 @@ public class JiChuDangAnJob {
             cjkjcspxx.setSspgg(inventory.getCinvstd());
             //产地 1
             cjkjcspxx.setSspcd(inventory.getCaddress());
+            //剂型
+            cjkjcspxx.setSjx(inventory.getCpreparationtype());
             //SZJM	VARCHAR2(40)	N	助记码 1
             String cinvmnemcode = inventory.getCinvmnemcode();
             if (cinvmnemcode == null || cinvmnemcode.equals("")) {
@@ -116,7 +121,14 @@ public class JiChuDangAnJob {
             //时间戳
             //cjkjcspxx.setSsjc("");
 //            商品分组类型 ERP没有  1
-            cjkjcspxx.setSfzlx(inventory.getCinvdefine2());
+
+            String cinvdefine2 = inventory.getCinvdefine2();
+            if (cinvdefine2!=null){
+                String drug2Code = getDrug2Code(cinvdefine2);
+                cjkjcspxx.setSfzlx(drug2Code);
+            }
+
+
 
             //备注 1
             cjkjcspxx.setSbz("");
@@ -147,20 +159,17 @@ public class JiChuDangAnJob {
             int dashIndex = cinvdefine4.indexOf("-");
             String substring = cinvdefine4.substring(0, dashIndex);
             cjkjcspxx.setNsfzy(Integer.parseInt(substring));
-
+            int i = Integer.parseInt(substring);
 
             //中药：26；二类精神：22；大输液：21；原料药：29；中药材：25；普通药品：0；食品：30；冷库：23；非药品：24 1
             String cinvdefine3 = inventory.getCinvdefine3();
-
-            int i = Integer.parseInt(substring);
-
-            cjkjcspxx.setNlx(i);
-            //是否冷藏 1
-            if (i == 23) {
-                cjkjcspxx.setNncbj(1);
-            }else {
-                cjkjcspxx.setNncbj(0);
+            if (cinvdefine3!=null){
+                Integer drug3Code = getDrug3Code(cinvdefine3);
+                cjkjcspxx.setNlx(drug3Code);
             }
+
+            //是否冷藏 1
+            cjkjcspxx.setNncbj(i);
 
 
             //是否异性包装
@@ -214,6 +223,7 @@ public class JiChuDangAnJob {
             CJKJCWLDW cjkjcwldw = new CJKJCWLDW();
             //接收标记 1
             cjkjcwldw.setNgxbj(1);
+
             cjkjcwldw.setNjsbj(0);
 
             //id 1
@@ -316,11 +326,12 @@ public class JiChuDangAnJob {
             //单位代码 单位编号 1
             cjkjcwldw.setSwldwid(customer.getCcuscode());
             cjkjcwldw.setSjkdwbh(customer.getCcuscode());
-
+            //cCusOAddress
+            //cjkjcwldw.setSzwdz(customer.getCcusoaddress());
             //中文名称 1
             cjkjcwldw.setSdwmc(customer.getCcusname());
             //中文地址 1
-            cjkjcwldw.setSzwdz(customer.getCcusaddress());
+            cjkjcwldw.setSzwdz(customer.getCcusoaddress());
 
             //邮政编码 1
             String ccuspostcode = customer.getCcuspostcode();
@@ -387,6 +398,74 @@ public class JiChuDangAnJob {
 
         }
         log.info("客户同步job结束");
+    }
+
+
+    public static Integer getDrug3Code(String itemType) {
+        // 使用toLowerCase()来确保类型匹配时不区分大小写
+        String lowerCaseType = itemType.toLowerCase();
+
+        switch (lowerCaseType) {
+            case "中药":
+                return 26;
+            case "二类精神":
+                return 22;
+            case "大输液":
+                return 21;
+            case "原料药":
+                return 29;
+            case "中药材":
+                return 25;
+            case "普通药品":
+                return 0;
+            case "食品":
+                return 30;
+            case "冷库":
+                return 23;
+            case "非药品":
+                return 24;
+            default:
+                throw new IllegalArgumentException("未知的药品类型: " + itemType);
+        }
+    }
+
+    public static String getDrug2Code(String drugType) {
+        switch (drugType.toLowerCase()) {
+            case "原料药":
+                return "618";
+            case "其他":
+                return "616";
+            case "蛋钛":
+                return "617";
+            case "中药材":
+                return "614";
+            case "注射剂":
+                return "601";
+            case "口服":
+                return "602";
+            case "外用":
+                return "603";
+            case "冷藏":
+                return "604";
+            case "非药品":
+                return "605";
+            case "医疗器械":
+                return "607";
+            case "大输液":
+                return "610";
+            case "含麻制剂":
+                return "608";
+            case "冷藏器械":
+                return "611";
+            case "二类精神":
+                return "612";
+            case "特殊药品":
+                return "613";
+            case "中药饮片":
+                return "699";
+            default:
+                throw new IllegalArgumentException("未知的药品类型: " + drugType);
+        }
     }
 
 

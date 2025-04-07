@@ -125,7 +125,7 @@ public class GspVouchNoteAdd {
         //发货单号
         DispatchList byCode = dispatchListMapper.getByCode("0000000029");
 
-        int i1 = gspVouchNoteMapper.addVouchNote(String.valueOf(forecastid), str, "demo", null,new Date());
+        int i1 = gspVouchNoteMapper.addVouchNote(byCode.getCdefine10(),String.valueOf(forecastid), str, "demo", null,new Date());
         if (i1 >0){
             System.out.println("添加成功");
             voucherHistoryMapper.codingAdd("010");

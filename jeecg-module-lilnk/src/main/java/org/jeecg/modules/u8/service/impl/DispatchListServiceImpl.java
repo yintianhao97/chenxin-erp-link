@@ -1,6 +1,7 @@
 package org.jeecg.modules.u8.service.impl;
 
 import org.jeecg.modules.u8.entity.DispatchList;
+
 import org.jeecg.modules.u8.mapper.DispatchListMapper;
 import org.jeecg.modules.u8.service.IDispatchListService;
 import org.springframework.beans.factory.annotation.Autowired;

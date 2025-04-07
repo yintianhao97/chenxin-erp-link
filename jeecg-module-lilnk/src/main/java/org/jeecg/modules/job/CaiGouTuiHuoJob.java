@@ -165,7 +165,7 @@ public class CaiGouTuiHuoJob {
             cjkdjckjhderp.setSzwdz(puArrivalVouch.getCarrivalplace());*/
 
             //System.out.println(cjkdjckjhderp);
-
+            log.info("保存表头:{}",cjkdjckjhderp);
             boolean save = icjkdjckjhderpService.save(cjkdjckjhderp);
             if (save) {
                 iTuiHuoLinkService.save(new TuiHuoLink().setErpid(puArrivalVouch.getId().toString()));
@@ -219,7 +219,6 @@ public class CaiGouTuiHuoJob {
                 cjkdjckjhdmxerp.setSsjc(formattedDate);
                 //货主id 1
                 cjkdjckjhdmxerp.setShzid("HXS");
-
                 //备注
                 //cjkdjckjhdmxerp.setSbz(puArrivalVouchs.getCmemo());
                 //货主公司ID
@@ -227,8 +226,9 @@ public class CaiGouTuiHuoJob {
                 cjkdjckjhdmxerp.setDgxsj(new Date());*/
                 //仓库ID
                 //cjkdjckjhdmxerp.setSgsid(lists.getCwhcode());
-                System.out.println(cjkdjckjhdmxerp);
-                System.out.println(icjkdjckjhdmxerpService.save(cjkdjckjhdmxerp));
+                log.info("保存表体:{}",cjkdjckjhdmxerp);
+                boolean save1 = icjkdjckjhdmxerpService.save(cjkdjckjhdmxerp);
+                log.info("保存表体:{}",save1);
             }
 
 
@@ -253,6 +253,8 @@ public class CaiGouTuiHuoJob {
             for (FhjlXs xs : fhjlXs1) {
                 AddPuStoreInVo addPuStoreInVo = new AddPuStoreInVo();
                 PuArrivalVouchs byIdAndRow = puArrivalVouchsMapper.getByIdAndRow(xs.getSjkid(), xs.getNhh().toString());
+
+                addPuStoreInVo.setCDefine12(vouchById.getCdefine12());
                 //TODO: 就一个仓库写死
                 addPuStoreInVo.setCwhcode(U8LinkConstant.U8_LINK_CWHCODE);
                 //部门
@@ -311,7 +313,7 @@ public class CaiGouTuiHuoJob {
                 icodes.add(addPuStoreInVo);
             }
             String jsonString = JSON.toJSONString(icodes);
-            System.out.println(jsonString);
+            log.info("请求json:{}",jsonString);
 
 
             String targetUrl = U8LinkConstant.U8_LINK_URL + "/U8API/AddCoPuStoreInTui";
@@ -334,7 +336,7 @@ public class CaiGouTuiHuoJob {
                 } else {
                     // 打印响应体
                     String string1 = response.body().string();
-                    System.out.println(string1);
+                    log.info(string1);
                     JSONObject jsonObject = JSONObject.parseObject(string1);
 
 
@@ -369,7 +371,7 @@ public class CaiGouTuiHuoJob {
         String str = String.format("%010d", i);
 
         UaIdentity uaIdentity = uaIdentityMapper.selectOne(new QueryWrapper<UaIdentity>()
-                .eq("cVouchType", "GSP_VOUCHUNSALABLE").eq("cAcc_Id", 900));
+                .eq("cVouchType", "GSP_VOUCHUNSALABLE").eq("cAcc_Id", U8LinkConstant.U8_LINK_CACC_ID));
         int autoid = uaIdentity.getIfatherid();
         int forecastid = autoid + 1000000001;
 
@@ -382,11 +384,13 @@ public class CaiGouTuiHuoJob {
         Date currentDate2 = new Date(calendar.getTimeInMillis());
 
 
-        int i1 = gspVouchUnsalableMapper.addVouchT(String.valueOf(forecastid), str, currentDate2, id, rdRecord01.getCcode(),
+        //todo:带制单人
+        int i1 = gspVouchUnsalableMapper.addVouchT(rdRecord01.getCdefine12(),String.valueOf(forecastid), str, currentDate2, id, rdRecord01.getCcode(),
                 rdRecord01.getDgatheringdate(), rdRecord01.getCvencode(), vouchById.getCmaker(), vouchById.getCmaker(),"demo",rdRecord01.getCwhcode(),currentDate2,new Date());
-        if (i1 > 0) {
 
-            System.out.println("单据添加成功");
+        if (i1 > 0) {
+            log.info("单据添加成功");
+
             uaIdentityMapper.iFatherIdAdd("GSP_VOUCHUNSALABLE", U8LinkConstant.U8_LINK_CACC_ID);
             voucherHistoryMapper.codingAdd("091");
         }
@@ -394,7 +398,7 @@ public class CaiGouTuiHuoJob {
         List<RdRecords01> rdRecords01s = rdRecords01Mapper.selectBById(id);
         for (RdRecords01 rdRecords01 : rdRecords01s) {
             UaIdentity uaIdentity1 = uaIdentityMapper.selectOne(new QueryWrapper<UaIdentity>()
-                    .eq("cVouchType", "GSP_VOUCHUNSALABLE").eq("cAcc_Id", 900));
+                    .eq("cVouchType", "GSP_VOUCHUNSALABLE").eq("cAcc_Id", U8LinkConstant.U8_LINK_CACC_ID));
             Integer ichildid = uaIdentity1.getIchildid();
             ichildid = ichildid + 1000000001;
             Gsp_VouchsUnsalable gspVouchsUnsalable = new Gsp_VouchsUnsalable();
@@ -423,8 +427,8 @@ public class CaiGouTuiHuoJob {
 
             int insert = gspVouchsUnsalableMapper.insert(gspVouchsUnsalable);
             if (insert > 0) {
-                System.out.println("单据子表添加成功");
-                System.out.println(gspVouchsUnsalable);
+                log.info(gspVouchsUnsalable.toString());
+                log.info("单据子表添加成功");
                 uaIdentityMapper.iChildIdAdd("GSP_VOUCHUNSALABLE", U8LinkConstant.U8_LINK_CACC_ID);
             }
 
@@ -451,7 +455,7 @@ public class CaiGouTuiHuoJob {
             } else {
                 // 打印响应体
                 String string1 = response.body().string();
-                System.out.println(string1);
+                log.info(string1);
 /*                JSONObject jsonObject = new JSONObject(string1);
                 String string = jsonObject.getString("code");*/
 

@@ -27,7 +27,7 @@ public interface Rdrecords32Mapper extends BaseMapper<Rdrecords32> {
     int updateCurrentStock(BigDecimal number,String cInvCode, String cBatch);
 
     @Update("UPDATE Gsp_VouchsQC\n" +
-            "set FSTQTY = #{fsQty},FSTNUM=#{fsNum}\n" +
+            "set FSTQTY = #{fsQty},FSTNUM=#{fsNum},BMAKESALEOUT = '1'\n" +
             "where autoid= #{AutoId}")
     int updateGspVouchsQC(String AutoId,BigDecimal fsQty,BigDecimal fsNum);
 

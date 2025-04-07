@@ -25,6 +25,9 @@ public class AddPuStoreInVo {
     private String cbuscode ;
 
 
+    private int imassdate;
+
+
     /// <summary>
     /// 供应商编码
     /// </summary>
@@ -119,8 +122,22 @@ public class AddPuStoreInVo {
     /// </summary>
     private BigDecimal iQuantity ;
 
+    /// <summary>
+    /// 到货日期
+    /// </summary>
+    private String darvdate ;
+
 
     private String icheckids ;
 
     private BigDecimal iinvexchrate;
+
+    private String cDefine12;
+
+    private String cexpirationdate;
+
+    private String dexpirationdate;
+
+    private String cmassunit;
+
 }

@@ -3,6 +3,7 @@ package org.jeecg.modules.u8.service;
 import org.jeecg.modules.u8.entity.GspVouchsQC;
 import com.baomidou.mybatisplus.extension.service.IService;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 /**
@@ -16,4 +17,7 @@ public interface IGspVouchsQCService extends IService<GspVouchsQC> {
 
 
     List<GspVouchsQC> selectByTid(String tid);
+
+
+    int installChouJian(String autoid, BigDecimal cbdefine2);
 }

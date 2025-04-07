@@ -221,7 +221,7 @@ public class CaiGouTuiHuoRuKu {
         Date currentDate2 = new Date(calendar.getTimeInMillis());
 
 
-        int i1 = gspVouchUnsalableMapper.addVouchT(String.valueOf(forecastid), str, currentDate2, id, rdRecord01.getCcode(),
+        int i1 = gspVouchUnsalableMapper.addVouchT(rdRecord01.getCdefine12(),String.valueOf(forecastid), str, currentDate2, id, rdRecord01.getCcode(),
                 rdRecord01.getDgatheringdate(), rdRecord01.getCvencode(), vouchById.getCmaker(), vouchById.getCmaker(),"demo",rdRecord01.getCwhcode(),currentDate2,new Date());
         if (i1 > 0) {
 

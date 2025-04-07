@@ -23,9 +23,13 @@ import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -100,7 +104,8 @@ public class CaiGouDingDanJob {
     private FhjlXsMapper fhjlXsMapper;
 
 
-    @Scheduled(cron = "0 0,10,20,30,40,50 * * * ? ")
+    //@Scheduled(cron = "0 0,10,20,30,40,50 * * * ? ")
+    @Scheduled(cron="0 0,5,10,15,20,25,30,35,40,45,50,55 * * * ? ")
     public void CaiGouDingDanJobRun() {
         log.info("==========采购到货job开始==========");
         this.caiGouDingDan();
@@ -108,6 +113,7 @@ public class CaiGouDingDanJob {
         this.yanShou();
         this.ruKuV2();
         log.info("==========采购到货job结束==========");
+
 
         log.info("==========采购退货job开始==========");
         this.caiGouTuiHuo();
@@ -154,6 +160,12 @@ public class CaiGouDingDanJob {
             ///货主id? 产成品入库哪里来的供货商 1
             cjkwmsrkhz.setShzid("HXS");
             cjkwmsrkhz.setShzgsid("HXS");
+
+            cjkwmsrkhz.setYunshfs("公路");
+            cjkwmsrkhz.setChyfs("配送");
+            cjkwmsrkhz.setYdhrq(formattedDate);
+            log.info("插入实体:{}",cjkwmsrkhz);
+
             boolean save = icjkwmsrkhzService.save(cjkwmsrkhz);
 
             if (save) {
@@ -221,7 +233,7 @@ public class CaiGouDingDanJob {
 
             }
             String json = JSON.toJSONString(shjlXs);
-            System.out.println(json);
+            log.info("传输Json:{}",json);
 
             String targetUrl = U8LinkConstant.U8_LINK_URL + "/U8API/AddDaoHuo";
             OkHttpClient client = new OkHttpClient()
@@ -242,9 +254,10 @@ public class CaiGouDingDanJob {
                 } else {
                     // 打印响应体
                     String string1 = response.body().string();
-                    System.out.println(string1);
+                    log.info("返回Json:{}",string1);
                     JSONObject jsonObject = JSONObject.parseObject(string1);
                     String string = jsonObject.getString("code");
+
                     if ("0".equals(string)) {
                         iShjlXsService.updateIsTqInt(s);
                     }
@@ -274,9 +287,21 @@ public class CaiGouDingDanJob {
             String ysdjbh = ysjlXs.getYsdjbh();
             PuArrivalVouch daoHuoByCode = puArrivalVouchMapper.getDaoHuoByCode(ysjlXs.getShdjbh());
             Integer id1 = daoHuoByCode.getId();
-            UaIdentity uaIdentity = uaIdentityMapper.selectOne(new QueryWrapper<UaIdentity>().eq("cVouchType", "GSP_VouchQC").eq("cAcc_Id", 900));
+            UaIdentity uaIdentity = uaIdentityMapper.selectOne(new QueryWrapper<UaIdentity>().eq("cVouchType", "GSP_VouchQC").eq("cAcc_Id", U8LinkConstant.U8_LINK_CACC_ID));
             int id = uaIdentity.getIfatherid();
             int forecastid = id + 1000000001;
+
+            String daohrq = ysjlXs.getDaohrq();
+            // 将字符串解析为LocalDate
+            LocalDate localDate = LocalDate.parse(daohrq);
+
+            // 将LocalDate转换为ZonedDateTime（假设我们使用的是系统默认时区）
+            ZonedDateTime zonedDateTime = localDate.atStartOfDay(ZoneId.systemDefault());
+
+            // 将ZonedDateTime转换为Date
+            Date daohrqDate = Date.from(zonedDateTime.toInstant());
+
+
 
             Calendar calendar = Calendar.getInstance();
             calendar.setTime(new Date());
@@ -299,16 +324,17 @@ public class CaiGouDingDanJob {
             gspVouchQC.setCcode(daoHuoByCode.getCcode());
 
             //审核
-            gspVouchQC.setCverifier("demo");
+            gspVouchQC.setCverifier(ysjlXs.getYanshr());
             gspVouchQC.setDverifydate(currentDate2);
             gspVouchQC.setDverifysystime(new Date());
             //日期
 
-            gspVouchQC.setDarvdate(currentDate2);
-            gspVouchQC.setDdate(currentDate2);
+            gspVouchQC.setDarvdate(daohrqDate);
+            gspVouchQC.setDdate(daohrqDate);
+            gspVouchQC.setDcheckdate(ysjlXs.getYanshr());
 
             //创建人
-            gspVouchQC.setCmaker("demo");
+            gspVouchQC.setCmaker(ysjlXs.getYanshr());
             //单据类型 001 验收单 002 拒收单
             gspVouchQC.setCvouchtype("001");
 
@@ -318,16 +344,20 @@ public class CaiGouDingDanJob {
             gspVouchQC.setIreturncount(0);
             gspVouchQC.setIverifystatenew(0);
             gspVouchQC.setIswfcontrolled(0);
-            gspVouchQC.setCmodifier("demo");
+            gspVouchQC.setCmodifier(ysjlXs.getYanshr());
             gspVouchQC.setDcreatesystime(new Date());
             // ||GS01| + 订单号;
             gspVouchQC.setCbsysbarcode("||GS01|" + ysdjbh);
-            System.out.println(gspVouchQC);
+            //自定义项
+            gspVouchQC.setCdefine12(daoHuoByCode.getCdefine12());
+            log.info(gspVouchQC.toString());
             boolean save = iGspVouchQCService.save(gspVouchQC);
 
+            //自定义项
+
+
             if (save) {
-                //TODO:需要一个更新字段
-                System.out.println("添加成功");
+                log.info("表头添加成功:{}",gspVouchQC);
                 iYsjlXsService.updateIsTq(ysdjbh);
                 uaIdentityMapper.iFatherIdAdd("GSP_VouchQC", U8LinkConstant.U8_LINK_CACC_ID);
                 //voucherHistoryMapper.codingAdd("001");
@@ -342,7 +372,7 @@ public class CaiGouDingDanJob {
 
                 PuArrivalVouchs puArrivalVouchs = puArrivalVouchsMapper.getByIdAndRow(id1.toString(), add.toString());
 
-                UaIdentity uaIdentity1 = uaIdentityMapper.selectOne(new QueryWrapper<UaIdentity>().eq("cVouchType", "GSP_VouchQC").eq("cAcc_Id", 900));
+                UaIdentity uaIdentity1 = uaIdentityMapper.selectOne(new QueryWrapper<UaIdentity>().eq("cVouchType", "GSP_VouchQC").eq("cAcc_Id", U8LinkConstant.U8_LINK_CACC_ID));
                 int ids = uaIdentity1.getIchildid();
                 int ichildid = ids + 1000000001;
 
@@ -365,6 +395,14 @@ public class CaiGouDingDanJob {
                 //二级单位
                 String cunitid = puArrivalVouchs.getCunitid();
 
+                //包装情况
+                gspVouchsQC.setCpack(ysjlX.getJiel());
+                //外观
+                gspVouchsQC.setCoutinstance(ysjlX.getJiel());
+                //验收结论
+                gspVouchsQC.setCconclusion(ysjlX.getJiel());
+                //抽样量
+                //gspVouchsQC.setFpartquantity(ysjlX.getChoujshl());
 
                 gspVouchsQC.setId(forecastid);
                 //存货编码
@@ -380,11 +418,14 @@ public class CaiGouDingDanJob {
                 //拒收数量
                 gspVouchsQC.setFrefusequantity(new BigDecimal("0"));
 
+                gspVouchsQC.setCwhcode(U8LinkConstant.U8_LINK_CWHCODE);
+
                 if (inum != null) {
                     //辅计量单位 验收数量    总数-拒收
                     gspVouchsQC.setFquantitys(NumberUtil.div(ysjlX.getShl(), div, 4));
                     //辅计量单位 总数
                     gspVouchsQC.setFarvquantitys(NumberUtil.div(ysjlX.getShl(), div, 4));
+                    gspVouchsQC.setInum(gspVouchsQC.getFarvquantitys());
                     //辅计量单位 合格数量
                     gspVouchsQC.setFelgquantitys(NumberUtil.div(ysjlX.getHegshl(), div, 4));
                     //辅计量单位 不合格数量
@@ -408,6 +449,7 @@ public class CaiGouDingDanJob {
                 gspVouchsQC.setBmakepurin(0);
                 gspVouchsQC.setBmakesaleout(0);
 
+
                 gspVouchsQC.setCmassunit(2);
                 gspVouchsQC.setBmakescrapin(0);
                 gspVouchsQC.setBgift(0);
@@ -415,15 +457,27 @@ public class CaiGouDingDanJob {
                 gspVouchsQC.setCbsysbarcode("||GS01|" + ysdjbh + "|" + djSn);
 
 
-                //生产日期
+                //生产日期 Dprodate,Dvaldate,Cvaldate
                 gspVouchsQC.setDprodate(puArrivalVouchs.getDpdate());
                 //到期日期
                 gspVouchsQC.setDvaldate(puArrivalVouchs.getDvdate());
+                //有效期
+                String cexpirationdate = puArrivalVouchs.getCexpirationdate();
+
+                DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+                Date date = null;
+                try {
+                    date = df.parse(cexpirationdate);
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+                gspVouchsQC.setCvaldate(date);
 
                 gspVouchsQC.setDdateT(new Date());
 
                 //有效期
                 gspVouchsQC.setImassdate(puArrivalVouchs.getImassdate());
+                gspVouchsQC.setCmassunit(puArrivalVouchs.getCmassunit());
                 //批号
                 gspVouchsQC.setCbatch(ysjlX.getPihao());
                 //到货单行ID
@@ -434,21 +488,23 @@ public class CaiGouDingDanJob {
                 gspVouchsQC.setCunitid(cunitid);
 
                 gspVouchsQC.setCchecker1(ysjlX.getYanshr());
-                System.out.println(gspVouchsQC);
 
                 //gspVouchsQC.setCchecker2("曹政");
 
                 boolean save1 = iGspVouchsQCService.save(gspVouchsQC);
-
+                log.info(gspVouchsQC.toString());
                 if (save1) {
-                    System.out.println("添加成功");
+                    log.info("表体添加成功");
                     if (inum != null) {
+
+                        //添加抽检
+                        puArrivalVouchsMapper.installChouJian(String.valueOf(ichildid),ysjlX.getChoujshl());
+
                         puArrivalVouchsMapper.updateYanShou(puArrivalVouchs.getAutoid().toString(), ysjlX.getShl().longValue(), ysjlX.getHegshl().longValue(), ysjlX.getBuhgshl().longValue(), ysjlX.getShl().longValue(), NumberUtil.div(ysjlX.getShl(), div, 4).longValue());
 
                     } else {
                         puArrivalVouchsMapper.updateYanShou(puArrivalVouchs.getAutoid().toString(), ysjlX.getShl().longValue(), ysjlX.getHegshl().longValue(), ysjlX.getBuhgshl().longValue(), ysjlX.getShl().longValue(), null);
                     }
-
                     uaIdentityMapper.iChildIdAdd("GSP_VouchQC", U8LinkConstant.U8_LINK_CACC_ID);
                 }
             }
@@ -482,7 +538,11 @@ public class CaiGouDingDanJob {
                 PuArrivalVouchs daohuoFByAutoID = puArrivalVouchsMapper.getDaohuoFByAutoID(gspVouchsQC.getIcodeT().toString());
                 AddPuStoreInVo addPuStoreInVo = new AddPuStoreInVo();
                 SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                SimpleDateFormat sd = new SimpleDateFormat("yyyy-MM-dd");
+
                 // 格式化Date对象
+                Date darvdate = byCodeCai.getDarvdate();
+                addPuStoreInVo.setDarvdate(sdf.format(darvdate));
                 //部门
                 addPuStoreInVo.setCDepCode(vouchById.getCdepcode());
                 //业务员
@@ -493,6 +553,11 @@ public class CaiGouDingDanJob {
                 //失效日期
                 Date dvaldate = gspVouchsQC.getDvaldate();
                 addPuStoreInVo.setDvdate(sdf.format(dvaldate));
+
+                Date cvaldate = gspVouchsQC.getCvaldate();
+
+                addPuStoreInVo.setDexpirationdate(sdf.format(cvaldate));
+                addPuStoreInVo.setCexpirationdate(sd.format(cvaldate));
                 //存货
                 addPuStoreInVo.setCInvCode(gspVouchsQC.getCinvcode());
                 //供应商
@@ -525,14 +590,24 @@ public class CaiGouDingDanJob {
                 addPuStoreInVo.setItaxrate(vouchById.getItaxrate());
                 //件数
                 addPuStoreInVo.setInum(gspVouchsQC.getFelgquantitys());
+
+                //保质期 与单位
+                addPuStoreInVo.setImassdate(gspVouchsQC.getImassdate());
+                addPuStoreInVo.setCmassunit(String.valueOf(gspVouchsQC.getCmassunit()));
+
+
+
+
                 //转换率
                 addPuStoreInVo.setIinvexchrate(daohuoFByAutoID.getIinvexchrate());
+
+                addPuStoreInVo.setCDefine12(byCodeCai.getCdefine12());
 
                 list.add(addPuStoreInVo);
             }
 
             String json = JSON.toJSONString(list);
-            System.out.println(json);
+            log.info("传输Json:{}",json);
 
             String targetUrl = U8LinkConstant.U8_LINK_URL + "/U8API/AddCoPuStoreIn";
             OkHttpClient client = new OkHttpClient()
@@ -554,12 +629,10 @@ public class CaiGouDingDanJob {
                 } else {
                     // 打印响应体
                     String string1 = response.body().string();
-                    System.out.println(string1);
+                    log.info("返回json:{}",string1);
                     JSONObject jsonObject = JSONObject.parseObject(string1);
                     String string = jsonObject.getString("code");
                     if ("0".equals(string)) {
-
-
                         sjjlXsMapper.update1ByYSDH(ysdh);
                     }
                 }
@@ -726,7 +799,7 @@ public class CaiGouDingDanJob {
             cjkdjckjhderp.setSjkid(puArrivalVouch.getId().toString());
             // cjkdjckjhderp.setSjkid("1000000070");
 
-            //单位ID 1
+            //单位ID 1 dispatchList.getCinvoicecompany()
             cjkdjckjhderp.setSwldwid(puArrivalVouch.getCvencode());
             //出库类型 2采购出库 1
             cjkdjckjhderp.setNcklx(8L);
@@ -845,8 +918,9 @@ public class CaiGouDingDanJob {
                 cjkdjckjhdmxerp.setDgxsj(new Date());*/
                 //仓库ID
                 //cjkdjckjhdmxerp.setSgsid(lists.getCwhcode());
-                System.out.println(cjkdjckjhdmxerp);
-                System.out.println(icjkdjckjhdmxerpService.save(cjkdjckjhdmxerp));
+                log.info("插入数据:{}",cjkdjckjhdmxerp);
+                boolean save1 = icjkdjckjhdmxerpService.save(cjkdjckjhdmxerp);
+                log.info("插入结果:{}",save1);
             }
 
 
@@ -871,6 +945,7 @@ public class CaiGouDingDanJob {
             for (FhjlXs xs : fhjlXs1) {
                 AddPuStoreInVo addPuStoreInVo = new AddPuStoreInVo();
                 PuArrivalVouchs byIdAndRow = puArrivalVouchsMapper.getByIdAndRow(xs.getSjkid(), xs.getNhh().toString());
+                addPuStoreInVo.setCDefine12(vouchById.getCdefine12());
                 //TODO: 就一个仓库写死
                 addPuStoreInVo.setCwhcode(U8LinkConstant.U8_LINK_CWHCODE);
                 //部门
@@ -878,7 +953,7 @@ public class CaiGouDingDanJob {
                 //供应商
                 addPuStoreInVo.setCVenCode(vouchById.getCvencode());
                 //采购订单号
-                addPuStoreInVo.setCordercode(vouchById.getCpocode());
+                addPuStoreInVo.setCordercode(byIdAndRow.getCordercode());
                 //到货单号
                 addPuStoreInVo.setCarvcode(vouchById.getCcode());
                 //采购到货ID
@@ -891,6 +966,10 @@ public class CaiGouDingDanJob {
                 addPuStoreInVo.setCassunit(byIdAndRow.getCunitid());
                 //批号
                 addPuStoreInVo.setCbatch(byIdAndRow.getCbatch());
+
+                addPuStoreInVo.setImassdate(byIdAndRow.getImassdate());
+
+                addPuStoreInVo.setCmassunit(String.valueOf(byIdAndRow.getCmassunit()));
                 //换算率
                 BigDecimal iinvexchrate = byIdAndRow.getIinvexchrate();
                 addPuStoreInVo.setIinvexchrate(iinvexchrate);
@@ -914,6 +993,11 @@ public class CaiGouDingDanJob {
                 String dpdateStr = sdf.format(dpdate);
                 addPuStoreInVo.setDmadedate(dpdateStr);
 
+                String format = sdf.format(byIdAndRow.getDexpirationdate());
+                addPuStoreInVo.setDexpirationdate(format);
+                addPuStoreInVo.setCexpirationdate(byIdAndRow.getCexpirationdate());
+
+
                 //采购到货子表
                 addPuStoreInVo.setIarrsid(byIdAndRow.getAutoid().toString());
                 //到货单号
@@ -929,7 +1013,7 @@ public class CaiGouDingDanJob {
                 icodes.add(addPuStoreInVo);
             }
             String jsonString = JSON.toJSONString(icodes);
-            System.out.println(jsonString);
+            log.info("传输json:{}", jsonString);
 
 
             String targetUrl = U8LinkConstant.U8_LINK_URL + "/U8API/AddCoPuStoreInTui";
@@ -952,7 +1036,7 @@ public class CaiGouDingDanJob {
                 } else {
                     // 打印响应体
                     String string1 = response.body().string();
-                    System.out.println(string1);
+                    log.info("返回结果:{}", string1);
                     JSONObject jsonObject = JSONObject.parseObject(string1);
 
 
@@ -987,7 +1071,7 @@ public class CaiGouDingDanJob {
         String str = String.format("%010d", i);
 
         UaIdentity uaIdentity = uaIdentityMapper.selectOne(new QueryWrapper<UaIdentity>()
-                .eq("cVouchType", "GSP_VOUCHUNSALABLE").eq("cAcc_Id", 900));
+                .eq("cVouchType", "GSP_VOUCHUNSALABLE").eq("cAcc_Id", U8LinkConstant.U8_LINK_CACC_ID));
         int autoid = uaIdentity.getIfatherid();
         int forecastid = autoid + 1000000001;
 
@@ -1000,8 +1084,8 @@ public class CaiGouDingDanJob {
         Date currentDate2 = new Date(calendar.getTimeInMillis());
 
 
-        int i1 = gspVouchUnsalableMapper.addVouchT(String.valueOf(forecastid), str, currentDate2, id, rdRecord01.getCcode(),
-                rdRecord01.getDgatheringdate(), rdRecord01.getCvencode(), vouchById.getCmaker(), vouchById.getCmaker(),"demo",rdRecord01.getCwhcode(),currentDate2,new Date());
+        int i1 = gspVouchUnsalableMapper.addVouchT(rdRecord01.getCdefine12(),String.valueOf(forecastid), str, currentDate2, id, rdRecord01.getCcode(),
+                vouchById.getDdate(), rdRecord01.getCvencode(), shr, shr,shr,rdRecord01.getCwhcode(),currentDate2,new Date());
         if (i1 > 0) {
 
             System.out.println("单据添加成功");
@@ -1012,7 +1096,7 @@ public class CaiGouDingDanJob {
         List<RdRecords01> rdRecords01s = rdRecords01Mapper.selectBById(id);
         for (RdRecords01 rdRecords01 : rdRecords01s) {
             UaIdentity uaIdentity1 = uaIdentityMapper.selectOne(new QueryWrapper<UaIdentity>()
-                    .eq("cVouchType", "GSP_VOUCHUNSALABLE").eq("cAcc_Id", 900));
+                    .eq("cVouchType", "GSP_VOUCHUNSALABLE").eq("cAcc_Id", U8LinkConstant.U8_LINK_CACC_ID));
             Integer ichildid = uaIdentity1.getIchildid();
             ichildid = ichildid + 1000000001;
             Gsp_VouchsUnsalable gspVouchsUnsalable = new Gsp_VouchsUnsalable();
@@ -1020,16 +1104,28 @@ public class CaiGouDingDanJob {
             gspVouchsUnsalable.setId(forecastid);
             //采购入库单子表编号
             gspVouchsUnsalable.setIrdsid(rdRecords01.getAutoid());
+            //
+            gspVouchsUnsalable.setCinstance("合格");
             //生产日期
             gspVouchsUnsalable.setDmadedate(rdRecords01.getDmadedate());
+            //有效期
+            gspVouchsUnsalable.setDvaldate(rdRecords01.getDvdate());
+            //有效期
+            gspVouchsUnsalable.setCvaldate(rdRecords01.getDexpirationdate());
+
+
+            gspVouchsUnsalable.setImassdate(rdRecords01.getImassdate());
+            gspVouchsUnsalable.setCmassunit(rdRecords01.getCmassunit());
+
+
+
             //辅助计量单位
             gspVouchsUnsalable.setCunitid(rdRecords01.getCassunit());
             //比例
             gspVouchsUnsalable.setIchangrate(rdRecords01.getIinvexchrate());
             //批号
             gspVouchsUnsalable.setCbatch(rdRecords01.getCbatch());
-            //有效期
-            gspVouchsUnsalable.setDvaldate(rdRecords01.getDvdate());
+
             //存货
             gspVouchsUnsalable.setCinvcode(rdRecords01.getCinvcode());
             //数量
@@ -1041,14 +1137,14 @@ public class CaiGouDingDanJob {
 
             int insert = gspVouchsUnsalableMapper.insert(gspVouchsUnsalable);
             if (insert > 0) {
-                System.out.println("单据子表添加成功");
-                System.out.println(gspVouchsUnsalable);
+                log.info("单据子表添加成功:{}", gspVouchsUnsalable);
                 uaIdentityMapper.iChildIdAdd("GSP_VOUCHUNSALABLE", U8LinkConstant.U8_LINK_CACC_ID);
             }
 
 
         }
-        String jsonString = "{}";
+        //不审核
+        /*String jsonString = "{}";
         String targetUrl = U8LinkConstant.U8_LINK_URL + "/U8API/ReViewCaiGouRuKu?id="+id;
         OkHttpClient client = new OkHttpClient()
                 .newBuilder()
@@ -1070,14 +1166,14 @@ public class CaiGouDingDanJob {
                 // 打印响应体
                 String string1 = response.body().string();
                 System.out.println(string1);
-/*                JSONObject jsonObject = new JSONObject(string1);
-                String string = jsonObject.getString("code");*/
+*//*                JSONObject jsonObject = new JSONObject(string1);
+                String string = jsonObject.getString("code");*//*
 
             }
         }  catch (IOException e) {
             throw new RuntimeException(e);
         }
-
+*/
 
 
     }
